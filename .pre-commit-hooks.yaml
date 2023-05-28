@@ -10,7 +10,7 @@
 - id: format-shell
   name: format-shell
   description: "Format the project's shell scripts."
-  entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/niall-byrne/cicd-tools:master
+  entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:master
   args:
     - "-w"
     - "--indent=2"
@@ -24,7 +24,7 @@
 - id: format-toml
   name: format-toml
   description: "Format the project's TOML files."
-  entry: --entrypoint=tomll --env=FORCE_COLOR=1 ghcr.io/niall-byrne/cicd-tools:master
+  entry: --entrypoint=tomll --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:master
   files: "^.+\\.toml$"
   language: docker_image
   pass_filenames: true
@@ -40,8 +40,7 @@
 - id: markdown-spelling
   name: markdown-spelling
   description: "Spellcheck the Markdown files."
-  entry: --entrypoint=vale ghcr.io/niall-byrne/cicd-tools:master
-  exclude: "^{{cookiecutter\\.project_slug}}/.+$"
+  entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
   files: "^.+\\.md$"
   language: docker_image
   pass_filenames: true
@@ -49,7 +48,7 @@
 - id: shell-fmt-lint
   name: shell-fmt-lint
   description: "Lint the project's shell script's formatting."
-  entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/niall-byrne/cicd-tools:master
+  entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:master
   args:
     - "-d"
     - "--indent=2"
@@ -63,7 +62,7 @@
 - id: shell-lint
   name: shell-lint
   description: "Lint the project's shell scripts."
-  entry: --entrypoint=shellcheck ghcr.io/niall-byrne/cicd-tools:master
+  entry: --entrypoint=shellcheck ghcr.io/cicd-tools-org/cicd-tools:master
   args:
     - "--color=always"
     - "--source-path=SCRIPTDIR"
@@ -79,7 +78,7 @@
   description: "Lint the project's TOML files."
   entry: ./.cicd-tools/boxes/bootstrap/pre-commit/toml-lint.sh
   args:
-    - ghcr.io/niall-byrne/cicd-tools:master
+    - ghcr.io/cicd-tools-org/cicd-tools:master
   files: "^.+\\.toml$"
   language: system
   pass_filenames: true
@@ -95,7 +94,7 @@
 - id: workflow-lint
   name: workflow-lint
   description: "Lint the project's GitHub workflow files."
-  entry: --entrypoint=actionlint ghcr.io/niall-byrne/cicd-tools:master
+  entry: --entrypoint=actionlint ghcr.io/cicd-tools-org/cicd-tools:master
   args:
     - "-color"
     - "-config-file"
