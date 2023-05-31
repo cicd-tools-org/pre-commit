@@ -1,0 +1,7 @@
+(A|a)nsible
+actionlint
+(D|d)ev
+Exe
+shfmt
+shellcheck
+tomll
