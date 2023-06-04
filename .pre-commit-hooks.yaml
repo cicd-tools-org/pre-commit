@@ -6,7 +6,17 @@
   files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
   language: system
   pass_filenames: false
-  stages: [commit]
+- id: commit-message-spelling
+  name: commit-message-spelling
+  description: "Check the spelling on the commit message."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/commit-spelling.sh
+  args:
+    - "ghcr.io/cicd-tools-org/cicd-tools:master"
+  language: system
+  pass_filenames: true
+  stages: [commit-msg]
+  require_serial: true
+  always_run: true
 - id: format-shell
   name: format-shell
   description: "Format the project's shell scripts."
@@ -83,6 +93,15 @@
   language: system
   pass_filenames: true
   stages: [commit]
+- id: vale-synchronize
+  name: vale-synchronize
+  description: "Download any required vale packages."
+  entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
+  args:
+    - "sync"
+  language: docker_image
+  pass_filenames: false
+  stages: [manual]
 - id: workflow-header-lint
   name: workflow-header-lint
   description: "Lint the headers of the project's GitHub workflow files."

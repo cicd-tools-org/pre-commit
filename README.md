@@ -31,23 +31,26 @@ These hooks all rely on 3rd party software to perform different types of static 
 | toml-lint            | Optionally runs [tomll](https://github.com/pelletier/go-toml) on your TOML configuration file.                               |
 | shell-fmt            | Runs [shfmt](https://github.com/mvdan/sh) to format all shell scripts.                                                       |
 | shell-lint           | Runs [shellcheck](https://www.shellcheck.net/) to lint all shell scripts.                                                    |
+| vale-synchronize     | Enables manually running [vale](https://github.com/errata-ai/vale) to download remote packages.                              |
 | workflow-lint        | Optionally runs [actionlint](https://github.com/rhysd/actionlint) on all GitHub workflows.                                   |
 | workflow-header-lint | Optionally runs a simple shell script to parse the headers on GitHub workflows.                                              |
 
 ### Implementation Details
 
-| Hook Name            | Exe Source   | Implementation                                                                                                                                                                                                 |
-| -------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ansible-lint         | user project | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/boxes/bootstrap/pre-commit/ansible-lint.sh) invokes ansible-lint in [poetry](https://python-poetry.org/).    |
-| format-shell         | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
-| format-toml          | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
-| markdown-linting     | 3rd party    | The [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli) container is used to invoke this tool.                                                                                               |
-| markdown-spelling    | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
-| toml-lint            | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
-| shell-fmt            | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
-| shell-lint           | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
-| workflow-lint        | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
-| workflow-header-lint | shell        | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/boxes/bootstrap/pre-commit/workflow-header-lint.sh) is invoked.                                              |
+| Hook Name               | Exe Source   | Implementation                                                                                                                                                                                                 |
+| ----------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ansible-lint            | user project | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/boxes/bootstrap/pre-commit/ansible-lint.sh) invokes ansible-lint in [poetry](https://python-poetry.org/).    |
+| commit-message-spelling | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| format-shell            | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| format-toml             | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| markdown-linting        | 3rd party    | The [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli) container is used to invoke this tool.                                                                                               |
+| markdown-spelling       | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| toml-lint               | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| shell-fmt               | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| shell-lint              | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| vale-synchronize        | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| workflow-lint           | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                             |
+| workflow-header-lint    | shell        | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/boxes/bootstrap/pre-commit/workflow-header-lint.sh) is invoked.                                              |
 
 ## License
 

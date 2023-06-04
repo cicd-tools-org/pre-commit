@@ -29,6 +29,7 @@ repos:
   - repo: https://github.com/cicd-tools-org/pre-commit.git
     rev: 464f0996828412ddad3b284ce4473f99c6e6270b
     hooks:
+      - id: commit-message-spelling
       - id: format-toml
       - id: markdown-lint
         args:
@@ -36,5 +37,6 @@ repos:
           - ".markdownlint.yml"
       - id: markdown-spelling
       - id: toml-lint
+      - id: vale-synchronize
       - id: workflow-header-lint
       - id: workflow-lint
