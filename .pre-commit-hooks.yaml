@@ -1,22 +1,4 @@
 ---
-- id: ansible-lint
-  name: ansible-lint
-  description: "Check the profile for Ansible best practices."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/ansible-lint.sh
-  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
-  language: system
-  pass_filenames: false
-- id: commit-message-spelling
-  name: commit-message-spelling
-  description: "Check the spelling on the commit message."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/commit-spelling.sh
-  args:
-    - "ghcr.io/cicd-tools-org/cicd-tools:master"
-  language: system
-  pass_filenames: true
-  stages: [commit-msg]
-  require_serial: true
-  always_run: true
 - id: format-shell
   name: format-shell
   description: "Format the project's shell scripts."
@@ -30,7 +12,7 @@
   files: "^.+\\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
-  stages: [manual]
+  stages: [commit]
 - id: format-toml
   name: format-toml
   description: "Format the project's TOML files."
@@ -38,39 +20,44 @@
   files: "^.+\\.toml$"
   language: docker_image
   pass_filenames: true
-  stages: [manual]
-- id: markdown-lint
-  name: markdown-lint
+  stages: [commit]
+- id: lint-ansible
+  name: lint-ansible
+  description: "Check the collection or role for Ansible best practices."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh
+  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
+  language: system
+  pass_filenames: false
+- id: lint-github-workflow
+  name: lint-github-workflow
+  description: "Lint the project's GitHub workflow files."
+  entry: --entrypoint=actionlint ghcr.io/cicd-tools-org/cicd-tools:master
+  args:
+    - "-color"
+    - "-config-file"
+    - ".cicd-tools/configuration/actionlint.yaml"
+  files: "^.github/workflows/.+\\.(yaml|yml)$"
+  language: docker_image
+  pass_filenames: false
+  stages: [commit]
+- id: lint-github-workflow-header
+  name: lint-github-workflow-header
+  description: "Lint the headers of the project's GitHub workflow files."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-github-workflow-header.sh
+  files: "^.github/workflows/.+\\.(yaml|yml)$"
+  language: system
+  pass_filenames: true
+  stages: [commit]
+- id: lint-markdown
+  name: lint-markdown
   description: "Lint the Markdown files."
   files: "^.+\\.md$"
   entry: ghcr.io/igorshubovych/markdownlint-cli:v0.34.0@sha256:3e42db866de0fc813f74450f1065eab9066607fed34eb119d0db6f4e640e6b8d
   language: docker_image
   pass_filenames: true
   stages: [commit]
-- id: markdown-spelling
-  name: markdown-spelling
-  description: "Spellcheck the Markdown files."
-  entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
-  files: "^.+\\.md$"
-  language: docker_image
-  pass_filenames: true
-  stages: [commit]
-- id: shell-fmt-lint
-  name: shell-fmt-lint
-  description: "Lint the project's shell script's formatting."
-  entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:master
-  args:
-    - "-d"
-    - "--indent=2"
-    - "-ci"
-    - "-sr"
-  exclude: "^\\.cicd-tools/boxes/.+$"
-  files: "^.+\\.(bash|sh)$"
-  language: docker_image
-  pass_filenames: true
-  stages: [commit]
-- id: shell-lint
-  name: shell-lint
+- id: lint-shell
+  name: lint-shell
   description: "Lint the project's shell scripts."
   entry: --entrypoint=shellcheck ghcr.io/cicd-tools-org/cicd-tools:master
   args:
@@ -83,18 +70,27 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
-- id: toml-lint
-  name: toml-lint
-  description: "Lint the project's TOML files."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/toml-lint.sh
+- id: spelling-commit-message
+  name: spelling-commit-message
+  description: "Check the spelling on the commit message."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/spelling-commit-message.sh
   args:
-    - ghcr.io/cicd-tools-org/cicd-tools:master
-  files: "^.+\\.toml$"
+    - "ghcr.io/cicd-tools-org/cicd-tools:master"
   language: system
   pass_filenames: true
+  stages: [commit-msg]
+  require_serial: true
+  always_run: true
+- id: spelling-markdown
+  name: spelling-markdown
+  description: "Spellcheck the Markdown files."
+  entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
+  files: "^.+\\.md$"
+  language: docker_image
+  pass_filenames: true
   stages: [commit]
-- id: vale-synchronize
-  name: vale-synchronize
+- id: spelling-vale-synchronize
+  name: spelling-vale-synchronize
   description: "Download any required vale packages."
   entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
   args:
@@ -102,23 +98,3 @@
   language: docker_image
   pass_filenames: false
   stages: [manual]
-- id: workflow-header-lint
-  name: workflow-header-lint
-  description: "Lint the headers of the project's GitHub workflow files."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/workflow-header-lint.sh
-  files: "^.github/workflows/.+\\.(yaml|yml)$"
-  language: system
-  pass_filenames: true
-  stages: [commit]
-- id: workflow-lint
-  name: workflow-lint
-  description: "Lint the project's GitHub workflow files."
-  entry: --entrypoint=actionlint ghcr.io/cicd-tools-org/cicd-tools:master
-  args:
-    - "-color"
-    - "-config-file"
-    - ".cicd-tools/configuration/actionlint.yaml"
-  files: "^.github/workflows/.+\\.(yaml|yml)$"
-  language: docker_image
-  pass_filenames: false
-  stages: [commit]

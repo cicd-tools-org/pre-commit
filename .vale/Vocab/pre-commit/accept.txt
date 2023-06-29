@@ -2,6 +2,7 @@
 actionlint
 (D|d)ev
 Exe
+formatters
 shfmt
 shellcheck
 tomll
