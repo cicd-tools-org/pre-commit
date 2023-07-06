@@ -30,6 +30,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | lint-github-workflow-header | Optionally runs a shell script to lint GitHub workflow headers.                                                  |
 | lint-markdown               | Runs [markdown-lint](https://github.com/davidanson/markdownlint) on your Markdown files.                         |
 | lint-shell                  | Runs [shellcheck](https://www.shellcheck.net/) to lint all shell scripts.                                        |
+| security-credentials        | Runs [trufflehog](https://trufflesecurity.com) to ensure you don't commit secrets to your codebase.              |
 | spelling-commit-message     | Runs [vale](https://github.com/errata-ai/vale) on your git commit messages to check for spelling errors.         |
 | spelling-markdown           | Runs [vale](https://github.com/errata-ai/vale) on your Markdown files to check for spelling errors.              |
 | spelling-vale-synchronize   | Enables manually running [vale](https://github.com/errata-ai/vale) to download remote packages.                  |
@@ -45,6 +46,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | lint-github-workflow-header | shell        | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/boxes/bootstrap/pre-commit/lint-github-workflow-header.sh) is invoked.                                    |
 | lint-markdown               | 3rd party    | The [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli) container is used to invoke this tool.                                                                                            |
 | lint-shell                  | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| security-credentials        | 3rd Party    | The official [trufflehog](https://hub.docker.com/r/trufflesecurity/trufflehog/) container is used to invoke this tool.                                                                                      |
 | spelling-commit-message     | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 | spelling-markdown           | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 | spelling-vale-synchronize   | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |

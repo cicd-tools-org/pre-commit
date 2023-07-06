@@ -6,3 +6,4 @@ formatters
 shfmt
 shellcheck
 tomll
+trufflehog

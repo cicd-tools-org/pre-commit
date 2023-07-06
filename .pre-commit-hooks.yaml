@@ -70,6 +70,20 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: security-credentials
+  name: security-credentials
+  description: "Scan codebase for checked in credentials."
+  entry: trufflesecurity/trufflehog:3.43.0@sha256:460227489a10503194ac752b22ec81260d0b36fa6869c3821bc4c1eae6e2525a
+  args:
+    - "git"
+    - "file://."
+    - "--fail"
+    - "--no-update"
+    - "--since-commit"
+    - "HEAD"
+  language: docker_image
+  pass_filenames: false
+  stages: [commit]
 - id: spelling-commit-message
   name: spelling-commit-message
   description: "Check the spelling on the commit message."

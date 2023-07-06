@@ -36,6 +36,7 @@ repos:
         args:
           - "-c"
           - ".markdownlint.yml"
+      - id: security-credentials
       - id: spelling-commit-message
       - id: spelling-markdown
       - id: spelling-vale-synchronize
