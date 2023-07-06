@@ -27,12 +27,15 @@ repos:
           - "./.yamllint.yml"
         stages: [commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: aa077c8ea73f12e0a2225ffcc6a7c8b9c58d132d
+    rev: cc00ef297fdcfff5382721288704890858a2106b
     hooks:
       - id: format-toml
       - id: lint-github-workflow
       - id: lint-github-workflow-header
       - id: lint-markdown
+        args:
+          - "-c"
+          - ".markdownlint.yml"
       - id: security-credentials
       - id: spelling-commit-message
       - id: spelling-markdown
