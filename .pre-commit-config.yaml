@@ -33,9 +33,6 @@ repos:
       - id: lint-github-workflow
       - id: lint-github-workflow-header
       - id: lint-markdown
-        args:
-          - "-c"
-          - ".markdownlint.yml"
       - id: security-credentials
       - id: spelling-commit-message
       - id: spelling-markdown
