@@ -79,8 +79,8 @@
     - "file://."
     - "--fail"
     - "--no-update"
-    - "--since-commit"
-    - "HEAD"
+    - "--debug"
+    - "--max-depth=500"
   language: docker_image
   pass_filenames: false
   stages: [commit]
