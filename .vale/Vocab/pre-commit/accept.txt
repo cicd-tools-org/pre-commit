@@ -1,4 +1,5 @@
 (A|a)nsible
+commitizen
 (D|d)ev
 Exe
 actionlint
