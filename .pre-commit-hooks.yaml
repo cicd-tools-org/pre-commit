@@ -73,7 +73,7 @@
 - id: security-credentials
   name: security-credentials
   description: "Scan codebase for checked in credentials."
-  entry: trufflesecurity/trufflehog:3.43.0@sha256:460227489a10503194ac752b22ec81260d0b36fa6869c3821bc4c1eae6e2525a
+  entry: trufflesecurity/trufflehog:3.63.2@sha256:16c1cf07b7142037a2859d4ad0f51c40603e7e58703ddb8bd80cf40e6af51f44
   args:
     - "git"
     - "file://."
