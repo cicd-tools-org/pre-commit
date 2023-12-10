@@ -4,6 +4,7 @@ Exe
 actionlint
 args
 formatters
+makefile
 shellcheck
 shfmt
 tomll
