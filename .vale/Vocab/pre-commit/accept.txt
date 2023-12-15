@@ -1,6 +1,7 @@
 (A|a)nsible
 commitizen
 (D|d)ev
+dockerfile
 Exe
 actionlint
 args

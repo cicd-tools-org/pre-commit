@@ -28,6 +28,13 @@
   files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
   language: system
   pass_filenames: false
+- id: lint-dockerfile
+  name: lint-dockerfile
+  description: "Lint the project's Dockerfiles."
+  entry: --entrypoint=hadolint ghcr.io/cicd-tools-org/cicd-tools:master
+  types: ["dockerfile"]
+  language: docker_image
+  stages: [commit]
 - id: lint-github-workflow
   name: lint-github-workflow
   description: "Lint the project's GitHub workflow files."
