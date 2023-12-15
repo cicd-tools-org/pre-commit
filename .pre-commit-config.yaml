@@ -27,7 +27,7 @@ repos:
           - "./.yamllint.yml"
         stages: [commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: 9fa35306aa6263eb3648eebc917089da33b0ce69
+    rev: bb8848e1652b87869415847e78fa980bb6f2e0a0
     hooks:
       - id: format-toml
       - id: lint-github-workflow
