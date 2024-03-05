@@ -9,5 +9,6 @@ formatters
 makefile
 shellcheck
 shfmt
+tmp
 tomll
 trufflehog

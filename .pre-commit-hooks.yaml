@@ -113,9 +113,10 @@
 - id: spelling-vale-synchronize
   name: spelling-vale-synchronize
   description: "Download any required vale packages."
-  entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --mount type=tmpfs,destination=/tmp --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
   args:
     - "sync"
   language: docker_image
+  always_run: true
   pass_filenames: false
   stages: [manual]
