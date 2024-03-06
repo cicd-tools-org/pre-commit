@@ -33,6 +33,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | spelling-commit-message     | Runs [vale](https://github.com/errata-ai/vale) on your git commit messages to check for spelling errors.         |
 | spelling-markdown           | Runs [vale](https://github.com/errata-ai/vale) on your Markdown files to check for spelling errors.              |
 | spelling-vale-synchronize   | Enables manually running [vale](https://github.com/errata-ai/vale) to download remote packages.                  |
+| spelling-vale-vocab         | Enables automated sorting of [vale](https://github.com/errata-ai/vale) vocabularies.                             |
 
 ### Implementation Details
 
@@ -49,6 +50,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | spelling-commit-message     | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 | spelling-markdown           | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 | spelling-vale-synchronize   | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| spelling-vale-vocab         | shell        | The local shell binary is used to invoke a one-liner.                                                                                                                                                     |
 
 ## License
 

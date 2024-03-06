@@ -123,3 +123,9 @@
   always_run: true
   pass_filenames: false
   stages: [manual]
+- id: spelling-vale-vocab
+  name: "spelling-vale-vocab"
+  entry: sh -c 'for FILE in "$@"; do sort -u -o ${FILE} ${FILE}; done' --
+  files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
+  language: system
+  stages: [commit]
