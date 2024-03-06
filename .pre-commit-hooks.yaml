@@ -60,6 +60,9 @@
   description: "Lint the Markdown files."
   files: "^.+\\.md$"
   entry: ghcr.io/igorshubovych/markdownlint-cli:v0.35.0@sha256:22cf4699a448a7bbc311a940e0600019423d7671cbedae9c35cd32b51f560350
+  args:
+    - "-c"
+    - ".markdownlint.yml"
   language: docker_image
   pass_filenames: true
   stages: [commit]
