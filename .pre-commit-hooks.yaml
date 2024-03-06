@@ -2,7 +2,7 @@
 - id: format-shell
   name: format-shell
   description: "Format the project's shell scripts."
-  entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:main
   args:
     - "-w"
     - "--indent=2"
@@ -16,7 +16,7 @@
 - id: format-toml
   name: format-toml
   description: "Format the project's TOML files."
-  entry: --entrypoint=tomll --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --entrypoint=tomll --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:main
   files: "^.+\\.toml$"
   language: docker_image
   pass_filenames: true
@@ -31,14 +31,14 @@
 - id: lint-dockerfile
   name: lint-dockerfile
   description: "Lint the project's Dockerfiles."
-  entry: --entrypoint=hadolint ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --entrypoint=hadolint ghcr.io/cicd-tools-org/cicd-tools:main
   types: ["dockerfile"]
   language: docker_image
   stages: [commit]
 - id: lint-github-workflow
   name: lint-github-workflow
   description: "Lint the project's GitHub workflow files."
-  entry: --entrypoint=actionlint ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --entrypoint=actionlint ghcr.io/cicd-tools-org/cicd-tools:main
   args:
     - "-color"
     - "-config-file"
@@ -69,7 +69,7 @@
 - id: lint-shell
   name: lint-shell
   description: "Lint the project's shell scripts."
-  entry: --entrypoint=shellcheck ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --entrypoint=shellcheck ghcr.io/cicd-tools-org/cicd-tools:main
   args:
     - "--color=always"
     - "--source-path=SCRIPTDIR"
@@ -99,7 +99,7 @@
   description: "Check the spelling on the commit message."
   entry: ./.cicd-tools/boxes/bootstrap/pre-commit/spelling-commit-message.sh
   args:
-    - "ghcr.io/cicd-tools-org/cicd-tools:master"
+    - "ghcr.io/cicd-tools-org/cicd-tools:main"
   language: system
   pass_filenames: true
   stages: [commit-msg]
@@ -108,7 +108,7 @@
 - id: spelling-markdown
   name: spelling-markdown
   description: "Spellcheck the Markdown files."
-  entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
   files: "^.+\\.md$"
   language: docker_image
   pass_filenames: true
@@ -116,7 +116,7 @@
 - id: spelling-vale-synchronize
   name: spelling-vale-synchronize
   description: "Download any required vale packages."
-  entry: --mount type=tmpfs,destination=/tmp --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:master
+  entry: --mount type=tmpfs,destination=/tmp --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
   args:
     - "sync"
   language: docker_image

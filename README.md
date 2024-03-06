@@ -1,14 +1,13 @@
 # Pre-Commit Hooks for CICD-Tools
 
-(Powered by [CICD-Tools](https://github.com/cicd-tools-org/cicd-tools).)
+[![cicd-tools](https://img.shields.io/badge/ci/cd:-cicd_tools-blue)](https://github.com/cicd-tools-org/cicd-tools)
+
+| Branch                                                         | Build                                                                                                                                                                                                        |
+|----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [main](https://github.com/cicd-tools-org/pre-commit/tree/main) | [![workflow-link](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml/badge.svg?branch=main)](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml) |
+| [dev](https://github.com/cicd-tools-org/pre-commit/tree/dev)   | [![workflow-link](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml/badge.svg?branch=dev)](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml)  |
 
 This repository provides [pre-commit](https://pre-commit.com/) hooks for the [CICD-Tools](https://github.com/cicd-tools-org/cicd-tools) project.
-
-#### Master Branch (Follows the latest production tag)
-[![workflow-link](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml/badge.svg?branch=master)](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml)
-
-#### Dev Branch
-[![workflow-link](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml/badge.svg?branch=dev)](https://github.com/cicd-tools-org/pre-commit/actions/workflows/workflow-push.yml)
 
 ### Containerization and Pre-Commit
 
@@ -37,19 +36,19 @@ These hooks all rely on 3rd party software to perform different types of static 
 
 ### Implementation Details
 
-| Hook Name                   | Exe Source   | Implementation                                                                                                                                                                                              |
-|-----------------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| format-shell                | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
-| format-toml                 | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
-| lint-ansible                | user project | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh) invokes ansible-lint in [poetry](https://python-poetry.org/). |
-| lint-github-workflow        | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
-| lint-github-workflow-header | shell        | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/boxes/bootstrap/pre-commit/lint-github-workflow-header.sh) is invoked.                                    |
-| lint-markdown               | 3rd party    | The official [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli/pkgs/container/markdownlint-cli) container is used to invoke this tool.                                                   |
-| lint-shell                  | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
-| security-credentials        | 3rd Party    | The official [trufflehog](https://hub.docker.com/r/trufflesecurity/trufflehog/) container is used to invoke this tool.                                                                                      |
-| spelling-commit-message     | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
-| spelling-markdown           | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
-| spelling-vale-synchronize   | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/master/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| Hook Name                   | Exe Source   | Implementation                                                                                                                                                                                            |
+|-----------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| format-shell                | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| format-toml                 | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| lint-ansible                | user project | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh) invokes ansible-lint in [poetry](https://python-poetry.org/). |
+| lint-github-workflow        | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| lint-github-workflow-header | shell        | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/boxes/bootstrap/pre-commit/lint-github-workflow-header.sh) is invoked.                                    |
+| lint-markdown               | 3rd party    | The official [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli/pkgs/container/markdownlint-cli) container is used to invoke this tool.                                                 |
+| lint-shell                  | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| security-credentials        | 3rd Party    | The official [trufflehog](https://hub.docker.com/r/trufflesecurity/trufflehog/) container is used to invoke this tool.                                                                                    |
+| spelling-commit-message     | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| spelling-markdown           | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| spelling-vale-synchronize   | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 
 ## License
 
