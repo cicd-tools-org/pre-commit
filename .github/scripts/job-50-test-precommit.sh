@@ -15,6 +15,7 @@ set -eo pipefail
 
 main() {
   pushd "${TEST_PROJECT_NAME}" >> /dev/null
+  poetry run pre-commit run --hook-stage manual spelling-vale-synchronize
   scenario "${1}"
   popd >> /dev/null
 }

@@ -1,14 +1,1 @@
-(A|a)nsible
-commitizen
-(D|d)ev
-dockerfile
-Exe
-actionlint
-args
-formatters
-makefile
-shellcheck
-shfmt
-tmp
-tomll
-trufflehog
+
