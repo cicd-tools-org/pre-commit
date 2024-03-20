@@ -38,6 +38,7 @@
   files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
   language: system
   pass_filenames: false
+  stages: [commit]
 - id: lint-dockerfile
   name: lint-dockerfile
   description: "Lint the project's Dockerfiles."
@@ -112,9 +113,9 @@
     - "ghcr.io/cicd-tools-org/cicd-tools:main"
   language: system
   pass_filenames: true
-  stages: [commit-msg]
   require_serial: true
   always_run: true
+  stages: [commit-msg]
 - id: spelling-markdown
   name: spelling-markdown
   description: "Spellcheck the Markdown files."
