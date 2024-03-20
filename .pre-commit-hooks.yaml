@@ -139,3 +139,11 @@
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
   stages: [commit]
+- id: poetry-lint-python
+  # Add pylint to your poetry environment to use this hook.
+  name: "poetry-lint-python"
+  description: "Lint the project's Python files using pylint from the local poetry environment."
+  entry: poetry run pylint
+  language: system
+  files: "^.+\\.py$"
+  stages: [commit]
