@@ -147,3 +147,17 @@
   language: system
   files: "^.+\\.py$"
   stages: [commit]
+- id: poetry-types-python
+  # Add mypy to your poetry environment to use this hook.
+  name: "types-python"
+  description: "Type check the project's Python files using mypy from the local poetry environment."
+  entry: poetry run mypy
+  args:
+    - "--strict"
+    - "--show-error-codes"
+    - "--implicit-reexport"
+    - "--explicit-package-bases"
+  language: system
+  files: "^.+\\.pyi?$"
+  stages: [commit]
+  require_serial: true

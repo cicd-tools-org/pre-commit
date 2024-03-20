@@ -36,6 +36,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | spelling-vale-synchronize   | Enables manually running [vale](https://github.com/errata-ai/vale) to download remote packages.                  |
 | spelling-vale-vocab         | Enables automated sorting of [vale](https://github.com/errata-ai/vale) vocabularies.                             |
 | poetry-lint-python          | Runs [pylint](https://github.com/pylint-dev/pylint) on all Python files to perform static code analysis.         |
+| poetry-types-python         | Runs [mypy](https://github.com/python/mypy) on all Python files to check typing.                                 |
 
 ### Implementation Details
 
@@ -55,6 +56,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | spelling-vale-synchronize   | CICD-Tools         | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 | spelling-vale-vocab         | shell              | The local shell binary is used to invoke a one-liner.                                                                                                                                                     |
 | poetry-lint-python          | poetry environment | The project's [poetry](https://python-poetry.org/) environment is used to invoke this tool.                                                                                                               |
+| poetry-types-python         | poetry environment | The project's [poetry](https://python-poetry.org/) environment is used to invoke this tool.                                                                                                               |
 
 ## License
 
