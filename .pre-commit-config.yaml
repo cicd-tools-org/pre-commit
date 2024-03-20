@@ -30,6 +30,7 @@ repos:
     rev: bb8848e1652b87869415847e78fa980bb6f2e0a0
     hooks:
       - id: format-toml
+      - id: git-conflict-markers
       - id: lint-github-workflow
       - id: lint-github-workflow-header
       - id: lint-markdown
