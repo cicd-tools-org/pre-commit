@@ -12,7 +12,7 @@
   files: "^.+\\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: format-toml
   name: format-toml
   description: "Format the project's TOML files."
@@ -20,7 +20,7 @@
   files: "^.+\\.toml$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: git-conflict-markers
   name: "git-conflict-markers"
   entry: git
@@ -32,7 +32,7 @@
   language: system
   pass_filenames: false
   require_serial: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-ansible
   name: lint-ansible
   description: "Check the collection or role for Ansible best practices."
@@ -40,13 +40,14 @@
   files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
   language: system
   pass_filenames: false
+  stages: [pre-commit]
 - id: lint-dockerfile
   name: lint-dockerfile
   description: "Lint the project's Dockerfiles."
   entry: --entrypoint=hadolint ghcr.io/cicd-tools-org/cicd-tools:main
   types: ["dockerfile"]
   language: docker_image
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-github-workflow
   name: lint-github-workflow
   description: "Lint the project's GitHub workflow files."
@@ -58,7 +59,7 @@
   files: "^.github/workflows/.+\\.(yaml|yml)$"
   language: docker_image
   pass_filenames: false
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-github-workflow-header
   name: lint-github-workflow-header
   description: "Lint the headers of the project's GitHub workflow files."
@@ -66,7 +67,7 @@
   files: "^.github/workflows/.+\\.(yaml|yml)$"
   language: system
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-markdown
   name: lint-markdown
   description: "Lint the Markdown files."
@@ -77,7 +78,7 @@
     - ".markdownlint.yml"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-shell
   name: lint-shell
   description: "Lint the project's shell scripts."
@@ -91,7 +92,7 @@
   files: "^.+\\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: security-credentials
   name: security-credentials
   description: "Scan codebase for checked in credentials."
@@ -105,7 +106,7 @@
     - "--max-depth=500"
   language: docker_image
   pass_filenames: false
-  stages: [commit]
+  stages: [pre-commit]
 - id: spelling-commit-message
   name: spelling-commit-message
   description: "Check the spelling on the commit message."
@@ -114,9 +115,9 @@
     - "ghcr.io/cicd-tools-org/cicd-tools:main"
   language: system
   pass_filenames: true
-  stages: [commit-msg]
   require_serial: true
   always_run: true
+  stages: [commit-msg]
 - id: spelling-markdown
   name: spelling-markdown
   description: "Spellcheck the Markdown files."
@@ -124,7 +125,7 @@
   files: "^.+\\.md$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: spelling-vale-synchronize
   name: spelling-vale-synchronize
   description: "Download any required vale packages."
@@ -140,7 +141,7 @@
   entry: sh -c 'for FILE in "$@"; do sort -u -o ${FILE} ${FILE}; done' --
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
-  stages: [commit]
+  stages: [pre-commit]
 - id: poetry-lint-python
   # Add pylint to your poetry environment to use this hook.
   name: "poetry-lint-python"
@@ -148,7 +149,7 @@
   entry: poetry run pylint
   language: system
   files: "^.+\\.py$"
-  stages: [commit]
+  stages: [pre-commit]
 - id: poetry-types-python
   # Add mypy to your poetry environment to use this hook.
   name: "types-python"
@@ -161,4 +162,4 @@
     - "--explicit-package-bases"
   language: system
   files: "^.+\\.pyi?$"
-  stages: [commit]
+  stages: [pre-commit]
