@@ -33,14 +33,6 @@
   pass_filenames: false
   require_serial: true
   stages: [pre-commit]
-- id: lint-ansible
-  name: lint-ansible
-  description: "Check the collection or role for Ansible best practices."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh
-  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
-  language: system
-  pass_filenames: false
-  stages: [pre-commit]
 - id: lint-dockerfile
   name: lint-dockerfile
   description: "Lint the project's Dockerfiles."
@@ -141,6 +133,15 @@
   entry: sh -c 'for FILE in "$@"; do sort -u -o ${FILE} ${FILE}; done' --
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
+  stages: [pre-commit]
+- id: poetry-lint-ansible
+  # Add ansible-lint to your poetry environment to use this hook.
+  name: poetry-lint-ansible
+  description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh
+  language: system
+  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
+  pass_filenames: false
   stages: [pre-commit]
 - id: poetry-lint-python
   # Add pylint to your poetry environment to use this hook.
