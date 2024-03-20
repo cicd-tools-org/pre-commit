@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-.PHONY: help clean dogfood fmt lint security spelling clean-git format-toml lint-markdown lint-workflows lint-yaml release security-leaks spelling-add spelling-markdown spelling-sync
+.PHONY: help clean dogfood fmt lint security spelling clean-git format-toml lint-markdown lint-workflows lint-yaml release security-leaks spelling-markdown spelling-sync
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -12,7 +12,6 @@ help:
 	@echo "  lint-yaml         to lint YAML files"
 	@echo "  release           to create a release"
 	@echo "  security-leaks    to check for credential leaks"
-	@echo "  spelling-add      to add a regex to the ignore patterns"
 	@echo "  spelling-markdown to spellcheck markdown files"
 	@echo "  spelling-sync     to synchronize vale packages"
 

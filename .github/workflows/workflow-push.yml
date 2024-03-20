@@ -28,7 +28,8 @@ jobs:
       NOTIFICATION_MESSAGE: "Workflow has started!"
 
   security:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-10-generic-security_scan_credentials.yml@main
@@ -36,8 +37,35 @@ jobs:
       EXTRA_BINARY_ARGS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_trufflehog_extra_scan_args }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
+  spelling_vocabularies:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
+    with:
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PRECOMMIT_HOOK_ID: "spelling-vale-vocab"
+      PRECOMMIT_HOOK_NAME: "Spelling vocabularies"
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
+  git_conflict_markers:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
+    with:
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PRECOMMIT_HOOK_ID: "git-conflict-markers"
+      PRECOMMIT_HOOK_NAME: "Git conflict markers"
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
   markdown_links:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-30-generic-markdown_links.yml@main
@@ -46,7 +74,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   pre-commit_hooks:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-50-poetry-test_basic_precommit_hooks.yml@main
@@ -58,7 +87,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   commit_lint:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-rev_range_command.yml@main
@@ -72,7 +102,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   commit_spell_check:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-rev_range_command.yml@main
@@ -89,7 +120,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   json_schema_lint:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
@@ -101,7 +133,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   markdown_lint:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
@@ -113,7 +146,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   markdown_spelling:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
@@ -126,7 +160,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   toml_lint:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
@@ -138,7 +173,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   workflow_lint:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     strategy:
@@ -159,7 +195,8 @@ jobs:
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
   yaml_lint:
-    needs: [configuration]
+    needs:
+      - configuration
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
@@ -173,7 +210,22 @@ jobs:
   create_release:
     permissions:
       contents: write
-    needs: [commit_lint, commit_spell_check, configuration, json_schema_lint, markdown_links, markdown_lint, markdown_spelling, pre-commit_hooks, security, start, toml_lint, workflow_lint, yaml_lint]
+    needs:
+      - commit_lint
+      - commit_spell_check
+      - configuration
+      - git_conflict_markers
+      - json_schema_lint
+      - markdown_links
+      - markdown_lint
+      - markdown_spelling
+      - pre-commit_hooks
+      - security
+      - start
+      - spelling_vocabularies
+      - toml_lint
+      - workflow_lint
+      - yaml_lint
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-99-poetry-create_release.yml@main
@@ -181,7 +233,8 @@ jobs:
       JSON_APPENDED_CONTENT: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_extra_release_content) }}
 
   success:
-    needs: [create_release]
+    needs:
+      - create_release
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-00-generic-notification.yml@main
