@@ -37,4 +37,5 @@ repos:
       - id: security-credentials
       - id: spelling-commit-message
       - id: spelling-markdown
-      - id: spelling-vale-synchronize
+      - id: spelling-vale-sync
+      - id: spelling-vale-vocab
