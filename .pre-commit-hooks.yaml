@@ -21,6 +21,16 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: git-conflict-markers
+  name: "git-conflict-markers"
+  entry: git
+  args:
+    - --no-pager
+    - diff
+    - --cached
+    - --check
+  language: system
+  stages: [commit]
 - id: lint-ansible
   name: lint-ansible
   description: "Check the collection or role for Ansible best practices."

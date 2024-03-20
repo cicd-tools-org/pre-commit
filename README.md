@@ -24,6 +24,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 |-----------------------------|------------------------------------------------------------------------------------------------------------------|
 | format-shell                | Runs [shfmt](https://github.com/mvdan/sh) to format your shell scripts.                                          |
 | format-toml                 | Runs [tomll](https://github.com/pelletier/go-toml) to format your TOML configuration files.                      |
+| git-conflict-markers        | Runs [git](https://git-scm.com/) to check for left over conflict markers in your commit.                         |
 | lint-ansible                | Runs [ansible-lint](https://github.com/ansible/ansible-lint) to check for Ansible best practices and behaviours. |
 | lint-github-workflow        | Optionally runs [actionlint](https://github.com/rhysd/actionlint) on all GitHub workflows.                       |
 | lint-github-workflow-header | Optionally runs a shell script to lint GitHub workflow headers.                                                  |
@@ -41,6 +42,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 |-----------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | format-shell                | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 | format-toml                 | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
+| git-conflict-markers        | local binary | The local git binary is invoked.                                                                                                                                                                          |
 | lint-ansible                | user project | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh) invokes ansible-lint in [poetry](https://python-poetry.org/). |
 | lint-github-workflow        | CICD-Tools   | The [CICD-Tools container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/container/Dockerfile) is used to invoke this tool.                                                          |
 | lint-github-workflow-header | shell        | A custom [CICD-Tools script](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/boxes/bootstrap/pre-commit/lint-github-workflow-header.sh) is invoked.                                    |
