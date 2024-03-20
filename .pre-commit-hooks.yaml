@@ -140,6 +140,15 @@
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
   stages: [commit]
+- id: poetry-lint-ansible
+  # Add ansible-lint to your poetry environment to use this hook.
+  name: poetry-lint-ansible
+  description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh
+  language: system
+  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
+  pass_filenames: false
+  stages: [commit]
 - id: poetry-lint-python
   # Add pylint to your poetry environment to use this hook.
   name: "poetry-lint-python"
