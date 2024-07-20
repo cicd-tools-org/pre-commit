@@ -11,17 +11,13 @@ TOOLBOX_PATH="$(pwd)/.cicd-tools"
 TOOLBOX_REMOTES_FOLDER="boxes"
 TOOLBOX_MANIFEST_FILE="${TOOLBOX_PATH}/manifest.json"
 
+# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../boxes/bootstrap/libraries/environment.sh"
+
 # shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/../boxes/bootstrap/libraries/logging.sh"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/environment.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../boxes/bootstrap/libraries/environment.sh" \
-  -o "DOWNLOAD_RETRIES DOWNLOAD_MAX_TIME" \
-  -d "3 30"
-
 main() {
-  OPTIND=1
-
   local MANIFEST_ASC
   local MANIFEST_DISABLE_SECURITY="false"
   local TARGET_TOOLBOX_VERSION
@@ -29,6 +25,10 @@ main() {
   local TEMP_DIRECTORY
 
   TEMP_DIRECTORY="$(mktemp -d)"
+
+  environment \
+    -o "DOWNLOAD_RETRIES DOWNLOAD_MAX_TIME" \
+    -d "3 30"
 
   _toolbox_args "$@"
   _toolbox_manifest_download
@@ -39,6 +39,10 @@ main() {
 }
 
 _toolbox_args() {
+  local OPTARG
+  local OPTIND=1
+  local OPTION
+
   while getopts "b:m:r:t:" OPTION; do
     case "$OPTION" in
       b)
@@ -156,7 +160,7 @@ _toolbox_manifest_load() {
 _toolbox_usage() {
   log "ERROR" "toolbox.sh -- download a remote toolbox from the CICD-Tools manifest."
   log "ERROR" "USAGE: toolbox.sh -b [TOOLBOX VERSION] -m [REMOTE MANIFEST URL]"
-  log "ERROR" "  Optional: -r [OPTIONAL RETRY COUNT] -m [OPTIONAL MAX RETRY TIME]"
+  log "ERROR" "  Optional: -r [OPTIONAL RETRY COUNT] -t [OPTIONAL MAX RETRY TIME]"
   exit 127
 }
 
