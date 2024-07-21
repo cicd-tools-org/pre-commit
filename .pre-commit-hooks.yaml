@@ -120,7 +120,7 @@
   name: spelling-markdown
   description: "Spellcheck the Markdown files."
   entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
-  files: "^.+\\.md$"
+  files: "^.+\\.md$|^.vale/Vocab/\\.+$"
   language: docker_image
   pass_filenames: true
   stages: [commit]
