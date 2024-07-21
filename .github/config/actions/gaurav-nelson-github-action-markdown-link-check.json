@@ -15,9 +15,6 @@
   "ignorePatterns": [
     {
       "pattern": "^https://github.com/cicd-tools-org/pre-commit/"
-    },
-    {
-      "pattern": "^https://github.com/cicd-tools-org/cicd-tools/"
     }
   ]
 }

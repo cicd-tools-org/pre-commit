@@ -21,6 +21,44 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: gettext-translations-add
+  name: "gettext-translations-add"
+  description: "Add new languages to the project folder structure for gettext."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh add -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  language: system
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  stages: [manual]
+- id: gettext-translations-compile
+  name: "gettext-translations-compile"
+  description: "Compile gettext '.po' files into '.mo' files for distribution."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh compile -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  language: system
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  stages: [manual]
+- id: gettext-translations-missing
+  description: "Check all gettext '.po' files for untranslated strings."
+  name: "gettext-translations-missing"
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh missing -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  files: "^.+\\.py$"
+  language: system
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  stages: [commit]
+- id: gettext-translations-update
+  name: "gettext-translations-update"
+  description: "Extract translatable strings from the code base with gettext and regenerate '.pot' and '.po' files."
+  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh update -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  files: "^.+\\.py$"
+  language: system
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  stages: [commit]
 - id: git-conflict-markers
   name: "git-conflict-markers"
   entry: git
