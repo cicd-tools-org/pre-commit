@@ -7,11 +7,11 @@
 
 set -eo pipefail
 
-# shellcheck source=/dev/null
-source "$(dirname -- "${BASH_SOURCE[0]}")/../libraries/environment.sh"
+# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/environment.sh"
 
-# shellcheck source=/dev/null
-source "$(dirname -- "${BASH_SOURCE[0]}")/../libraries/logging.sh"
+# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
 
 GETTEXT_TRANSLATIONS_SED_PATTERN='s,^\"Content-Type: text/plain; charset=CHARSET\\n\"$,\"Content-Type: text/plain; charset=UTF-8\\n\",g'
 GETTEXT_TRANSLATIONS_EXAMPLE_LANGUAGES_CODES_URL="https://www.gnu.org/software/gettext/manual/html_node/Usual-Language-Codes.html"
@@ -19,14 +19,13 @@ GETTEXT_TRANSLATIONS_EXAMPLE_LANGUAGES_CODES_URL="https://www.gnu.org/software/g
 _gettext_translations_args() {
   local GETTEXT_TRANSLATIONS_COMMAND
   local OPTARG
-  local OPTIND
+  local OPTIND=1
   local OPTION
 
   if [[ -z "${1}" ]]; then
     _gettext_translations_usage
   fi
 
-  OPTIND=1
   GETTEXT_TRANSLATIONS_COMMAND="${1}"
   shift
 
@@ -218,6 +217,10 @@ _gettext_translations_identify_existing_languages() {
   fi
 }
 
+_gettext_translations_require_docker_image_env_var() {
+  environment -m "GETTEXT_TRANSLATIONS_DOCKER_IMAGE"
+}
+
 _gettext_translations_run_binary() {
   # $1 The binary to run
   # $@ The arguments to pass to that binary
@@ -321,8 +324,7 @@ gettext_translations_add() {
   local GETTEXT_TRANSLATIONS_NEW_PO_FILE_NAME
   local GETTEXT_TRANSLATIONS_POT_FILE
 
-  environment \
-    -m "GETTEXT_TRANSLATIONS_DOCKER_IMAGE"
+  _gettext_translations_require_docker_image_env_var
 
   # shellcheck disable=SC2128
   if [[ -z "${GETTEXT_TRANSLATIONS_LANGUAGES}" ]]; then
@@ -385,8 +387,7 @@ gettext_translations_compile() {
 
   GETTEXT_TRANSLATIONS_LANGUAGES=()
 
-  environment \
-    -m "GETTEXT_TRANSLATIONS_DOCKER_IMAGE"
+  _gettext_translations_require_docker_image_env_var
 
   if ! _gettext_translations_check_existing_base_path ||
     ! _gettext_translations_identify_existing_languages; then
@@ -468,8 +469,7 @@ gettext_translations_update() {
 
   GETTEXT_TRANSLATIONS_LANGUAGES=()
 
-  environment \
-    -m "GETTEXT_TRANSLATIONS_DOCKER_IMAGE"
+  _gettext_translations_require_docker_image_env_var
 
   mkdir -p "${GETTEXT_TRANSLATIONS_BASE_PATH}"
 
