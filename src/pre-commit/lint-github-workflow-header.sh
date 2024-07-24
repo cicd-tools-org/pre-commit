@@ -8,8 +8,8 @@
 
 set -eo pipefail
 
-# shellcheck source=/dev/null
-source "$(dirname -- "${BASH_SOURCE[0]}")/../libraries/logging.sh"
+# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
 
 main() {
   for WORKFLOW_FILE_PATH in "$@"; do

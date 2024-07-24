@@ -24,8 +24,8 @@
 - id: gettext-translations-add
   name: "gettext-translations-add"
   description: "Add new languages to the project folder structure for gettext."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh add -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
-  language: system
+  entry: ./src/pre-commit/gettext-translations.sh add -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  language: script
   pass_filenames: false
   always_run: true
   require_serial: true
@@ -33,18 +33,18 @@
 - id: gettext-translations-compile
   name: "gettext-translations-compile"
   description: "Compile gettext '.po' files into '.mo' files for distribution."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh compile -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
-  language: system
+  entry: ./src/pre-commit/gettext-translations.sh compile -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  language: script
   pass_filenames: false
   always_run: true
   require_serial: true
   stages: [manual]
 - id: gettext-translations-missing
-  description: "Check all gettext '.po' files for untranslated strings."
   name: "gettext-translations-missing"
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh missing -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  description: "Check all gettext '.po' files for untranslated strings."
+  entry: ./src/pre-commit/gettext-translations.sh missing -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   files: "^.+\\.py$"
-  language: system
+  language: script
   pass_filenames: false
   always_run: true
   require_serial: true
@@ -52,9 +52,9 @@
 - id: gettext-translations-update
   name: "gettext-translations-update"
   description: "Extract translatable strings from the code base with gettext and regenerate '.pot' and '.po' files."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/gettext-translations.sh update -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  entry: ./src/pre-commit/gettext-translations.sh update -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   files: "^.+\\.py$"
-  language: system
+  language: script
   pass_filenames: false
   always_run: true
   require_serial: true
@@ -99,9 +99,9 @@
 - id: lint-github-workflow-header
   name: lint-github-workflow-header
   description: "Lint the headers of the project's GitHub workflow files."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-github-workflow-header.sh
+  entry: ./src/pre-commit/lint-github-workflow-header.sh
   files: "^.github/workflows/.+\\.(yaml|yml)$"
-  language: system
+  language: script
   pass_filenames: true
   stages: [commit]
 - id: lint-markdown
@@ -146,10 +146,10 @@
 - id: spelling-commit-message
   name: spelling-commit-message
   description: "Check the spelling on the commit message."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/spelling-commit-message.sh
+  entry: ./src/pre-commit/spelling-commit-message.sh
   args:
     - "ghcr.io/cicd-tools-org/cicd-tools:main"
-  language: system
+  language: script
   pass_filenames: true
   require_serial: true
   always_run: true
@@ -182,8 +182,8 @@
   # Add ansible-lint to your poetry environment to use this hook.
   name: poetry-lint-ansible
   description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh
-  language: system
+  entry: ./src/pre-commit/lint-ansible.sh
+  language: script
   files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
   pass_filenames: false
   stages: [commit]

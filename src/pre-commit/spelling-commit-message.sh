@@ -9,8 +9,8 @@
 
 set -eo pipefail
 
-# shellcheck source=/dev/null
-source "$(dirname -- "${BASH_SOURCE[0]}")/../libraries/logging.sh"
+# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
 
 main() {
   local PRECOMMIT_GIT_COMMIT_MESSAGE_FILE
@@ -22,13 +22,16 @@ main() {
   PRECOMMIT_VALE_DOCKER_IMAGE="${1}"
   PRECOMMIT_MOUNT_FOLDER="${PRE_COMMIT_OVERRIDE_DOCKER_HOST_PATH:-${PWD}}"
 
-  log "DEBUG" "PRE_COMMIT > Docker Image: '${PRECOMMIT_VALE_DOCKER_IMAGE}'"
-  log "DEBUG" "PRE_COMMIT > Commit Message: '${PRECOMMIT_GIT_COMMIT_MESSAGE_FILE}'"
+  log "INFO" "Checking commit message spelling..."
+
+  log "DEBUG" "Docker Image: '${PRECOMMIT_VALE_DOCKER_IMAGE}'"
+  log "DEBUG" "Commit Message: '${PRECOMMIT_GIT_COMMIT_MESSAGE_FILE}'"
   sed "${PRECOMMIT_GIT_CONTENT_REGEX}" "${PRECOMMIT_GIT_COMMIT_MESSAGE_FILE}"
-  log "DEBUG" "PRE_COMMIT > Running vale ..."
+  log "DEBUG" "Running vale ..."
   sed "${PRECOMMIT_GIT_CONTENT_REGEX}" "${PRECOMMIT_GIT_COMMIT_MESSAGE_FILE}" |
     docker run -i --rm -v "${PRECOMMIT_MOUNT_FOLDER}":/mnt --workdir /mnt "${PRECOMMIT_VALE_DOCKER_IMAGE}" vale
-  log "INFO" "PRE-COMMIT > Commit message spelling has passed!"
+
+  log "INFO" "Commit message spelling has passed!"
 }
 
 main "$@"
