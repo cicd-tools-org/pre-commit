@@ -6,11 +6,11 @@
 
 set -eo pipefail
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/environment.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/environment.sh"
+# shellcheck source=./../cicd-tools/libraries/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/environment.sh"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
+# shellcheck source=./../cicd-tools/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/logging.sh"
 
 main() {
   environment -m "CZ_PRE_NEW_VERSION"
