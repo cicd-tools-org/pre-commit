@@ -8,11 +8,11 @@
 
 set -eo pipefail
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
+# shellcheck source=./../cicd-tools/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/logging.sh"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/tools.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/tools.sh"
+# shellcheck source=./../cicd-tools/libraries/tools.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/tools.sh"
 
 main() {
   local TARGET_FOLDERS=${*-"."}

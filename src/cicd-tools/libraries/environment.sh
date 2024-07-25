@@ -4,7 +4,7 @@
 
 set -eo pipefail
 
-# shellcheck source=/dev/null
+# shellcheck source=./logging.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/logging.sh"
 
 environment() {
@@ -23,16 +23,16 @@ _environment_args() {
   local OPTIND
   local OPTION
 
-  while getopts "d:o:m:" OPTION; do
+  while getopts "d:m:o:" OPTION; do
     case "$OPTION" in
       d)
         _environment_parse_defaults "${OPTARG}"
         ;;
-      o)
-        _environment_parse_optional "${OPTARG}"
-        ;;
       m)
         _environment_parse_mandatory "${OPTARG}"
+        ;;
+      o)
+        _environment_parse_optional "${OPTARG}"
         ;;
       \?)
         _environment_usage
@@ -55,11 +55,13 @@ _environment_parse_defaults() {
 }
 
 _environment_parse_mandatory() {
+  local ENVIRONMENT_VARIABLE
+
   log "DEBUG" "ENVIRONMENT > Parsing MANDATORY environment variables."
   IFS=' ' read -r -a MANDATORY <<< "${1}"
-  for VARIABLE in "${MANDATORY[@]}"; do
-    if [[ -z ${!VARIABLE} ]]; then
-      log "ERROR" "ENVIRONMENT > The environment variable '${VARIABLE}' is required!"
+  for ENVIRONMENT_VARIABLE in "${MANDATORY[@]}"; do
+    if [[ -z ${!ENVIRONMENT_VARIABLE} ]]; then
+      log "ERROR" "ENVIRONMENT > The environment variable '${ENVIRONMENT_VARIABLE}' is required!"
       exit 127
     fi
   done
@@ -71,9 +73,12 @@ _environment_parse_optional() {
 }
 
 _environment_set_defaults() {
-  log "DEBUG" "ENVIRONMENT > Setting DEFAULT environment variable values."
   local INDEX=-1
-  for VARIABLE in "${DEFAULTS[@]}"; do
+  local ENVIRONMENT_VARIABLE
+
+  log "DEBUG" "ENVIRONMENT > Setting DEFAULT environment variable values."
+
+  for ENVIRONMENT_VARIABLE in "${DEFAULTS[@]}"; do
     ((INDEX++)) || true
     if [[ -z "${!OPTIONAL[${INDEX}]}" ]]; then
       export "${OPTIONAL[${INDEX}]}"
@@ -88,7 +93,7 @@ _environment_usage() {
   log "ERROR" "---------------------------------------------------------------------"
   log "ERROR" "environment.sh"
   log "ERROR" "           -d (SPACE SEPARATED LIST OF DEFAULT VALUES FOR OPTIONALS)"
-  log "ERROR" "           -o (SPACE SEPARATED LIST OF NAMES FOR OPTIONAL ENV VARS)"
   log "ERROR" "           -m (SPACE SEPARATED LIST OF NAMES FOR MANDATORY ENV VARS)"
+  log "ERROR" "           -o (SPACE SEPARATED LIST OF NAMES FOR OPTIONAL ENV VARS)"
   exit 127
 }
