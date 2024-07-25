@@ -21,32 +21,34 @@ These hooks all rely on 3rd party software to perform different types of static 
 
 ### Included Pre-Commit Hooks
 
-| Hook Name                    | Description                                                                                                      |
-|------------------------------|------------------------------------------------------------------------------------------------------------------|
-| format-shell                 | Runs [shfmt](https://github.com/mvdan/sh) to format your shell scripts.                                          |
-| format-toml                  | Runs [tomll](https://github.com/pelletier/go-toml) to format your TOML configuration files.                      |
-| gettext-translations-add     | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to support adding additional languages.          |
-| gettext-translations-compile | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to compile '.mo' files from '.po' files.         |
-| gettext-translations-missing | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to search for missing translations.              |
-| gettext-translations-update  | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to extract translations and update all files.    |
-| git-conflict-markers         | Runs [git](https://git-scm.com/) to check for left over conflict markers in your commit.                         |
-| lint-github-workflow         | Optionally runs [actionlint](https://github.com/rhysd/actionlint) on all GitHub workflows.                       |
-| lint-github-workflow-header  | Optionally runs a shell script to lint GitHub workflow headers.                                                  |
-| lint-markdown                | Runs [markdown-lint](https://github.com/davidanson/markdownlint) on your Markdown files.                         |
-| lint-shell                   | Runs [shellcheck](https://www.shellcheck.net/) to lint all shell scripts.                                        |
-| security-credentials         | Runs [trufflehog](https://trufflesecurity.com) to ensure you don't commit secrets to your codebase.              |
-| spelling-commit-message      | Runs [vale](https://github.com/errata-ai/vale) on your git commit messages to check for spelling errors.         |
-| spelling-markdown            | Runs [vale](https://github.com/errata-ai/vale) on your Markdown files to check for spelling errors.              |
-| spelling-vale-sync           | Enables manually running [vale](https://github.com/errata-ai/vale) to download remote packages.                  |
-| spelling-vale-vocab          | Enables automated sorting of [vale](https://github.com/errata-ai/vale) vocabularies.                             |
-| poetry-lint-ansible          | Runs [ansible-lint](https://github.com/ansible/ansible-lint) to check for Ansible best practices and behaviours. |
-| poetry-lint-python           | Runs [pylint](https://github.com/pylint-dev/pylint) on all Python files to perform static code analysis.         |
-| poetry-types-python          | Runs [mypy](https://github.com/python/mypy) on all Python files to check typing.                                 |
+| Hook Name                    | Description                                                                                                                                   |
+|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| commitizen-pre-bump          | A [commitizen](https://pypi.org/project/commitizen/) 'pre_bump_hook' for interoperability with [tomll](https://github.com/pelletier/go-toml). |
+| format-shell                 | Runs [shfmt](https://github.com/mvdan/sh) to format your shell scripts.                                                                       |
+| format-toml                  | Runs [tomll](https://github.com/pelletier/go-toml) to format your TOML configuration files.                                                   |
+| gettext-translations-add     | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to support adding additional languages.                                       |
+| gettext-translations-compile | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to compile '.mo' files from '.po' files.                                      |
+| gettext-translations-missing | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to search for missing translations.                                           |
+| gettext-translations-update  | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to extract translations and update all files.                                 |
+| git-conflict-markers         | Runs [git](https://git-scm.com/) to check for left over conflict markers in your commit.                                                      |
+| lint-github-workflow         | Optionally runs [actionlint](https://github.com/rhysd/actionlint) on all GitHub workflows.                                                    |
+| lint-github-workflow-header  | Optionally runs a shell script to lint GitHub workflow headers.                                                                               |
+| lint-markdown                | Runs [markdown-lint](https://github.com/davidanson/markdownlint) on your Markdown files.                                                      |
+| lint-shell                   | Runs [shellcheck](https://www.shellcheck.net/) to lint all shell scripts.                                                                     |
+| security-credentials         | Runs [trufflehog](https://trufflesecurity.com) to ensure you don't commit secrets to your codebase.                                           |
+| spelling-commit-message      | Runs [vale](https://github.com/errata-ai/vale) on your git commit messages to check for spelling errors.                                      |
+| spelling-markdown            | Runs [vale](https://github.com/errata-ai/vale) on your Markdown files to check for spelling errors.                                           |
+| spelling-vale-sync           | Enables manually running [vale](https://github.com/errata-ai/vale) to download remote packages.                                               |
+| spelling-vale-vocab          | Enables automated sorting of [vale](https://github.com/errata-ai/vale) vocabularies.                                                          |
+| poetry-lint-ansible          | Runs [ansible-lint](https://github.com/ansible/ansible-lint) to check for Ansible best practices and behaviours.                              |
+| poetry-lint-python           | Runs [pylint](https://github.com/pylint-dev/pylint) on all Python files to perform static code analysis.                                      |
+| poetry-types-python          | Runs [mypy](https://github.com/python/mypy) on all Python files to check typing.                                                              |
 
 ### Implementation Details
 
 | Hook Name                    | Exe Source         | Implementation                                                                                                                                                                                                               |
 |------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| commitizen-pre-bump          | shell              | A custom [script](src/pre-commit/commitizen-pre-bump.sh) is invoked                                                                                                                                                          |
 | format-shell                 | CICD-Tools         | The [CICD-Tools utilities container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/containers/utilities/Dockerfile) is used to invoke this tool.                                                        |
 | format-toml                  | CICD-Tools         | The [CICD-Tools utilities container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/containers/utilities/Dockerfile) is used to invoke this tool.                                                        |
 | gettext-translations-add     | CICD-Tools         | A custom [script](src/pre-commit/gettext-translations.sh) is invoked which uses the [CICD-Tools gettext container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/containers/gettext/Dockerfile).        |

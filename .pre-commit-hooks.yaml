@@ -1,4 +1,13 @@
 ---
+- id: commitizen-pre-bump
+  name: commitizen-pre-bump
+  description: "TOML quote formatting for commitizen."
+  entry: ./src/pre-commit/commitizen-pre-bump.sh
+  language: script
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  stages: [manual]
 - id: format-shell
   name: format-shell
   description: "Format the project's shell scripts."

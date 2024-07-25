@@ -29,6 +29,7 @@ repos:
   - repo: https://github.com/cicd-tools-org/pre-commit.git
     rev: 61f080f7bf1314d6b13df2c3ae4a48e5c6abee32
     hooks:
+      - id: commitizen-pre-bump
       - id: format-toml
       - id: git-conflict-markers
       - id: lint-github-workflow
