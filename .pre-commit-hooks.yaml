@@ -1,4 +1,34 @@
 ---
+- id: cicd-tools-box
+  name: cicd-tools-box
+  description: "Install a CICD-Tools toolbox from the gpg key verified manifest."
+  entry: ./src/pre-commit/cicd-tools-box.sh -c curlimages/curl:8.90.@sha256:4c1cc1c836054961219e03d71e3f48a993aa40b92c3482eed316e50ede4889d9 -j ghcr.io/cicd-tools-org/cicd-tools:main -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
+  args:
+    - "-b"
+    - "0.1.0"
+    - "-m"
+    - "https://raw.githubusercontent.com/cicd-tools-org/manifest/main/manifest.json.asc"
+  language: script
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  stages: [manual]
+- id: cicd-tools-key
+  name: cicd-tools-key
+  description: "Import the CICD-Tools gpg key for toolbox manifest verification."
+  entry: ./src/pre-commit/cicd-tools-key.sh -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
+  args:
+    - "-n"
+    - "F07A79647E91E561A786B6D0D9020F7FEE20DBF2"
+    - "-p"
+    - "hkps://keys.openpgp.org"
+    - "-s"
+    - "keyserver.ubuntu.com"
+  language: script
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  stages: [manual]
 - id: commitizen-pre-bump
   name: commitizen-pre-bump
   description: "TOML quote formatting for commitizen."

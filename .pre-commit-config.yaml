@@ -27,14 +27,18 @@ repos:
           - "./.yamllint.yml"
         stages: [commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: 11ade60761c0d25d3d733fb39dd6cbf63848c02c
+    rev: d1beab76aee01c287e4b7fc98d220e68e7e64c67
     hooks:
       - id: commitizen-pre-bump
+      - id: format-shell
+        exclude: "^\\.cicd-tools/boxes/disabled$"
       - id: format-toml
       - id: git-conflict-markers
       - id: lint-github-workflow
       - id: lint-github-workflow-header
       - id: lint-markdown
+      - id: lint-shell
+        exclude: "^\\.cicd-tools/boxes/disabled$"
       - id: security-credentials
       - id: spelling-commit-message
       - id: spelling-markdown

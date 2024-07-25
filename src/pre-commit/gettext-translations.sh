@@ -7,6 +7,9 @@
 
 set -eo pipefail
 
+# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/container.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/container.sh"
+
 # shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/environment.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/environment.sh"
 
@@ -219,27 +222,22 @@ _gettext_translations_identify_existing_languages() {
 
 _gettext_translations_require_docker_image_env_var() {
   environment -m "GETTEXT_TRANSLATIONS_DOCKER_IMAGE"
+  container_cache_image "${GETTEXT_TRANSLATIONS_DOCKER_IMAGE}"
 }
 
 _gettext_translations_run_binary() {
-  # $1 The binary to run
-  # $@ The arguments to pass to that binary
-  local GETTEXT_TRANSLATIONS_BINARY
+  # $@: The arguments to pass to the container
+  local GETTEXT_TRANSLATIONS_BINARY_EXIT_CODE
 
-  GETTEXT_TRANSLATIONS_BINARY="${1}"
-  shift
+  GETTEXT_TRANSLATIONS_BINARY_EXIT_CODE="$(
+    container \
+      "${GETTEXT_TRANSLATIONS_DOCKER_IMAGE}" \
+      "$@"
+  )"
 
-  log "DEBUG" "  Container Image: '${GETTEXT_TRANSLATIONS_DOCKER_IMAGE}'"
-  log "DEBUG" "  Container Binary: '${GETTEXT_TRANSLATIONS_BINARY}'"
-  log "DEBUG" "  Container Arguments: '$*'"
-
-  docker run \
-    --rm \
-    -t \
-    -v "$(git rev-parse --show-toplevel):/mnt" \
-    "${GETTEXT_TRANSLATIONS_DOCKER_IMAGE}" \
-    "${GETTEXT_TRANSLATIONS_BINARY}" \
-    "$@"
+  if [[ "${GETTEXT_TRANSLATIONS_BINARY_EXIT_CODE}" -ne 0 ]]; then
+    log "ERROR" "The above command failed execution."
+  fi
 }
 
 _gettext_translations_write_base_pot_file() {
@@ -346,7 +344,7 @@ gettext_translations_add() {
       break
     fi
 
-    echo ""
+    echo "${GETTEXT_TRANSLATIONS_LANGUAGES}"
 
     log "INFO" "Adding '${GETTEXT_TRANSLATIONS_LANGUAGE}' ..."
     GETTEXT_TRANSLATIONS_NEW_LANGUAGE_PATH="${GETTEXT_TRANSLATIONS_BASE_PATH}/${GETTEXT_TRANSLATIONS_LANGUAGE}/LC_MESSAGES"
@@ -366,7 +364,8 @@ gettext_translations_add() {
       cp -rp \
         "${GETTEXT_TRANSLATIONS_POT_FILE}" \
         "${GETTEXT_TRANSLATIONS_NEW_PO_FILE_NAME}"
-      _gettext_translations_run_binary msgmerge \
+      _gettext_translations_run_binary \
+        msgmerge \
         -q \
         --force-po \
         -U "${GETTEXT_TRANSLATIONS_NEW_PO_FILE_NAME}" \
