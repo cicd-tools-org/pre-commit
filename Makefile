@@ -5,7 +5,7 @@
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo "  clean-git         to run git clean"
-	@echo "  dogfood           tp update the dogfood commit"
+	@echo "  dogfood           to update the dogfood commit"
 	@echo "  format-toml       to format TOML files"
 	@echo "  lint-markdown     to lint markdown files"
 	@echo "  lint-workflows    to lint all files"
@@ -28,8 +28,8 @@ clean-git:
 
 dogfood:
 	@echo "Creating dogfood commit ..."
-	@sed -i.bak "s,rev: .\{40\},rev: $(shell git rev-parse HEAD),g" .pre-commit-config.yaml; rm .pre-commit-config.yaml.bak
-	@git stage .pre-commit-config.yaml
+	@sed -i.bak "s,rev: .\{40\},rev: $(shell git rev-parse HEAD),g" .pre-commit-config.yaml .cicd-tools/configuration/pre-commit-bootstrap.yaml; rm .pre-commit-config.yaml.bak .cicd-tools/configuration/pre-commit-bootstrap.yaml.bak
+	@git stage .pre-commit-config.yaml .cicd-tools/configuration/pre-commit-bootstrap.yaml
 	@git commit -m "ci(PRE-COMMIT): move dog food hash" --no-verify
 
 format-toml:

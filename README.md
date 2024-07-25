@@ -23,7 +23,6 @@ These hooks all rely on 3rd party software to perform different types of static 
 
 | Hook Name                    | Description                                                                                                                                   |
 |------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| commitizen-pre-bump          | A [commitizen](https://pypi.org/project/commitizen/) 'pre_bump_hook' for interoperability with [tomll](https://github.com/pelletier/go-toml). |
 | format-shell                 | Runs [shfmt](https://github.com/mvdan/sh) to format your shell scripts.                                                                       |
 | format-toml                  | Runs [tomll](https://github.com/pelletier/go-toml) to format your TOML configuration files.                                                   |
 | gettext-translations-add     | Runs [gettext](https://www.gnu.org/software/gettext/) utilities to support adding additional languages.                                       |
@@ -48,7 +47,6 @@ These hooks all rely on 3rd party software to perform different types of static 
 
 | Hook Name                    | Exe Source         | Implementation                                                                                                                                                                                                               |
 |------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| commitizen-pre-bump          | shell              | A custom [script](src/pre-commit/commitizen-pre-bump.sh) is invoked                                                                                                                                                          |
 | format-shell                 | CICD-Tools         | The [CICD-Tools utilities container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/containers/utilities/Dockerfile) is used to invoke this tool.                                                        |
 | format-toml                  | CICD-Tools         | The [CICD-Tools utilities container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/containers/utilities/Dockerfile) is used to invoke this tool.                                                        |
 | gettext-translations-add     | CICD-Tools         | A custom [script](src/pre-commit/gettext-translations.sh) is invoked which uses the [CICD-Tools gettext container](https://github.com/cicd-tools-org/cicd-tools/blob/main/.cicd-tools/containers/gettext/Dockerfile).        |
