@@ -12,11 +12,11 @@ TOOLBOX_ABSOLUTE_PATH="${PWD}/${TOOLBOX_PATH}"
 TOOLBOX_REMOTES_FOLDER="boxes"
 TOOLBOX_MANIFEST_FILE="${TOOLBOX_PATH}/manifest.json"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/container.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/container.sh"
+# shellcheck source=./../cicd-tools/libraries/container.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/container.sh"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
+# shellcheck source=./../cicd-tools/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/logging.sh"
 
 main() {
   local TOOLBOX_DOCKER_IMAGE_CURL="system"

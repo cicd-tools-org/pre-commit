@@ -7,14 +7,14 @@
 
 set -eo pipefail
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/container.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/container.sh"
+# shellcheck source=./../cicd-tools/libraries/container.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/container.sh"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/environment.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/environment.sh"
+# shellcheck source=./../cicd-tools/libraries/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/environment.sh"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
+# shellcheck source=./../cicd-tools/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/logging.sh"
 
 GETTEXT_TRANSLATIONS_SED_PATTERN='s,^\"Content-Type: text/plain; charset=CHARSET\\n\"$,\"Content-Type: text/plain; charset=UTF-8\\n\",g'
 GETTEXT_TRANSLATIONS_EXAMPLE_LANGUAGES_CODES_URL="https://www.gnu.org/software/gettext/manual/html_node/Usual-Language-Codes.html"

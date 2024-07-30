@@ -9,11 +9,11 @@
 
 set -eo pipefail
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/logging.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/logging.sh"
+# shellcheck source=./../cicd-tools/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/logging.sh"
 
-# shellcheck source=./.cicd-tools/boxes/bootstrap/libraries/container.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../../.cicd-tools/boxes/bootstrap/libraries/container.sh"
+# shellcheck source=./../cicd-tools/libraries/container.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/container.sh"
 
 main() {
   local PRECOMMIT_GIT_COMMIT_MESSAGE_FILE

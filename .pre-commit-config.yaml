@@ -27,9 +27,10 @@ repos:
           - "./.yamllint.yml"
         stages: [commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: d1beab76aee01c287e4b7fc98d220e68e7e64c67
+    rev: a8e03131d971f19df29f5555e6853c60855e4ae5
     hooks:
-      - id: commitizen-pre-bump
+      - id: cicd-tools-box
+      - id: cicd-tools-key
       - id: format-shell
         exclude: "^\\.cicd-tools/boxes/disabled$"
       - id: format-toml
