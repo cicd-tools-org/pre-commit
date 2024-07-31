@@ -18,6 +18,9 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/container.sh"
 # shellcheck source=./../cicd-tools/libraries/logging.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/logging.sh"
 
+# shellcheck source=./../cicd-tools/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/override.sh"
+
 main() {
   local TOOLBOX_DOCKER_IMAGE_CURL="system"
   local TOOLBOX_DOCKER_IMAGE_GPG="system"
@@ -32,6 +35,15 @@ main() {
   local TOOLBOX_TEMP_DIRECTORY
 
   _toolbox_args "$@"
+
+  override \
+    -o "TOOLBOX_OVERRIDE_DOCKER_IMAGE_CURL TOOLBOX_OVERRIDE_DOCKER_IMAGE_GPG TOOLBOX_OVERRIDE_DOCKER_IMAGE_JQ TOOLBOX_OVERRIDE_MANIFEST_URL TOOLBOX_OVERRIDE_TOOLBOX_VERSION" \
+    -t "TOOLBOX_DOCKER_IMAGE_CURL TOOLBOX_DOCKER_IMAGE_GPG TOOLBOX_DOCKER_IMAGE_JQ TOOLBOX_MANIFEST_ASC TOOLBOX_TARGET_VERSION"
+
+  if [[ -z "${TOOLBOX_TARGET_VERSION}" ]] ||
+    [[ -z "${TOOLBOX_MANIFEST_ASC}" ]]; then
+    _toolbox_usage
+  fi
 
   TOOLBOX_TEMP_DIRECTORY="$(mktemp -d "./tmp.XXXXXXXXX")"
 
@@ -90,11 +102,6 @@ _toolbox_args() {
     esac
   done
   shift $((OPTIND - 1))
-
-  if [[ -z "${TOOLBOX_TARGET_VERSION}" ]] ||
-    [[ -z "${TOOLBOX_MANIFEST_ASC}" ]]; then
-    _toolbox_usage
-  fi
 }
 
 _toolbox_box_checksum() {
