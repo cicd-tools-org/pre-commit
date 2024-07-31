@@ -13,6 +13,9 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/container.sh"
 # shellcheck source=./../cicd-tools/libraries/logging.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/logging.sh"
 
+# shellcheck source=./../cicd-tools/libraries/logging.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/libraries/override.sh"
+
 main() {
   local TOOLBOX_GPG_DECRYPTED_FILE
   local TOOLBOX_GPG_DOCKER_IMAGE="system"
@@ -27,6 +30,18 @@ main() {
   TOOLBOX_GPG_ENCRYPTED_FILE="$(dirname -- "${BASH_SOURCE[0]}")/../cicd-tools/pgp/verification.sign"
 
   _toolbox_gpg_args "$@"
+
+  override \
+    -o "TOOLBOX_OVERRIDE_DOCKER_IMAGE_GPG TOOLBOX_OVERRIDE_GPG_KEY_SERVER_PRIMARY TOOLBOX_OVERRIDE_GPG_KEY_SERVER_SECONDARY TOOLBOX_OVERRIDE_GPG_KEY_NAME" \
+    -t "TOOLBOX_GPG_DOCKER_IMAGE TOOLBOX_GPG_KEYSERVER_PRIMARY TOOLBOX_GPG_KEYSERVER_SECONDARY TOOLBOX_GPG_KEY_NAME"
+
+  if [[ -z "${TOOLBOX_GPG_DECRYPTED_FILE}" ]] ||
+    [[ -z "${TOOLBOX_GPG_DOCKER_IMAGE}" ]] ||
+    [[ -z "${TOOLBOX_GPG_ENCRYPTED_FILE}" ]] ||
+    [[ -z "${TOOLBOX_GPG_KEY_NAME}" ]] ||
+    [[ -z "${TOOLBOX_GPG_KEYSERVER_PRIMARY}" ]]; then
+    _toolbox_gpg_usage
+  fi
 
   TOOLBOX_GPG_TEMP_DIRECTORY="$(mktemp -d "./tmp.XXXXXXXXX")"
 
@@ -84,14 +99,6 @@ _toolbox_gpg_args() {
     esac
   done
   shift $((OPTIND - 1))
-
-  if [[ -z "${TOOLBOX_GPG_DECRYPTED_FILE}" ]] ||
-    [[ -z "${TOOLBOX_GPG_DOCKER_IMAGE}" ]] ||
-    [[ -z "${TOOLBOX_GPG_ENCRYPTED_FILE}" ]] ||
-    [[ -z "${TOOLBOX_GPG_KEY_NAME}" ]] ||
-    [[ -z "${TOOLBOX_GPG_KEYSERVER_PRIMARY}" ]]; then
-    _toolbox_gpg_usage
-  fi
 }
 
 _toolbox_gpg_import_key() {
