@@ -3,6 +3,18 @@ default_install_hook_types:
   - pre-commit
   - commit-msg
 repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.0
+    hooks:
+      - id: ruff-check
+        alias: ruff-fix
+        args:
+          - "--fix"
+        types: ["python"]
+        stages: ["manual"]
+      - id: ruff-check
+        alias: ruff-lint
+        types: ["python"]
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.22.0
     hooks:
@@ -27,7 +39,7 @@ repos:
           - "./.yamllint.yml"
         stages: [commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: 61f080f7bf1314d6b13df2c3ae4a48e5c6abee32
+    rev: 84e92c05d8317adf123e82ebdf19af8f94e2dc87
     hooks:
       - id: cicd-tools-box
       - id: cicd-tools-key
@@ -40,6 +52,9 @@ repos:
       - id: lint-markdown
       - id: lint-shell
         exclude: "^\\.cicd-tools/boxes/disabled$"
+      - id: poetry-types-python
+        files: "^src/cicd_tools_pre_commit/.+\\.pyi?$"
+        exclude: "^src/cicd_tools_pre_commit/.*tests/.+\\.pyi?$"
       - id: security-credentials
       - id: spelling-commit-message
       - id: spelling-markdown
