@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-.PHONY: help clean dogfood fmt lint security spelling clean-git format-toml lint-markdown lint-workflows lint-yaml release security-leaks spelling-markdown spelling-sync
+.PHONY: help clean dogfood fmt lint security spelling clean-git format-toml lint-markdown lint-workflows lint-yaml release security-leaks spelling-markdown spelling-sync test-python
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -14,12 +14,14 @@ help:
 	@echo "  security-leaks    to check for credential leaks"
 	@echo "  spelling-markdown to spellcheck markdown files"
 	@echo "  spelling-sync     to synchronize vale packages"
+	@echo "  test-python       to test the python scripts"
 
 clean: clean-git
 fmt: format-toml
 lint: lint-markdown lint-workflows lint-yaml
 security: security-leaks
 spelling: spelling-markdown
+test: test-python
 
 clean-git:
 	@echo "Cleaning git content ..."
@@ -71,3 +73,8 @@ spelling-markdown:
 spelling-sync:
 	@echo "Synchronizing vale ..."
 	@poetry run bash -c "pre-commit run --hook-stage manual spelling-vale-sync --all-files --verbose"
+
+test-python:
+	@echo "Testing python scripts ..."
+	@poetry run python src/cicd_tools_pre_commit/tests/test_cicd_tools_pre_commit.py
+	@echo "Done."
