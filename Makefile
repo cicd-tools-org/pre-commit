@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-.PHONY: help clean dogfood fmt lint security spelling clean-git format-toml lint-markdown lint-workflows lint-yaml release security-leaks spelling-markdown spelling-sync
+.PHONY: help clean dogfood fmt lint security spelling clean-git format-toml lint-markdown lint-workflows lint-yaml release security-leaks spelling-markdown spelling-sync test-python
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -14,12 +14,14 @@ help:
 	@echo "  security-leaks    to check for credential leaks"
 	@echo "  spelling-markdown to spellcheck markdown files"
 	@echo "  spelling-sync     to synchronize vale packages"
+	@echo "  test-python       to test the python scripts"
 
 clean: clean-git
 fmt: format-toml
 lint: lint-markdown lint-workflows lint-yaml
 security: security-leaks
 spelling: spelling-markdown
+test: test-python
 
 clean-git:
 	@echo "Cleaning git content ..."
@@ -32,6 +34,11 @@ dogfood:
 	@git stage .pre-commit-config.yaml .cicd-tools/configuration/pre-commit-bootstrap.yaml
 	@git commit -m "ci(PRE-COMMIT): move dog food hash" --no-verify
 
+format-python:
+	@echo "Checking Python files ..."
+	@poetry run bash -c "pre-commit run ruff-fix --all-files --verbose --hook-stage=manual"
+	@echo "Done."
+
 format-toml:
 	@echo "Checking TOML files ..."
 	@poetry run bash -c "pre-commit run format-toml --all-files --verbose"
@@ -40,6 +47,11 @@ format-toml:
 lint-markdown:
 	@echo "Checking Markdown files ..."
 	@poetry run bash -c "pre-commit run lint-markdown --all-files --verbose"
+	@echo "Done."
+
+lint-python:
+	@echo "Checking Python files ..."
+	@poetry run bash -c "pre-commit run ruff-lint --all-files --verbose"
 	@echo "Done."
 
 lint-workflows:
@@ -71,3 +83,8 @@ spelling-markdown:
 spelling-sync:
 	@echo "Synchronizing vale ..."
 	@poetry run bash -c "pre-commit run --hook-stage manual spelling-vale-sync --all-files --verbose"
+
+test-python:
+	@echo "Testing python scripts ..."
+	@cd src && poetry run python -m unittest discover
+	@echo "Done."
