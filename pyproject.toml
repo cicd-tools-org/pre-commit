@@ -13,15 +13,58 @@ version_provider = 'poetry'
 [tool.poetry]
 authors = ['Niall Byrne <niall@niallbyrne.ca>']
 description = 'Hooks for CICD-Tools.'
+include = ['cicd-tools/**/*']
 name = 'cicd-tools-pre-commit'
 readme = 'README.md'
 version = '0.5.0'
 
 [tool.poetry.dependencies]
-python = '^3.9'
+check-jsonschema = '^0.29.1'
+python = '>=3.8,<4.0'
 
 [tool.poetry.group]
 [tool.poetry.group.dev]
 [tool.poetry.group.dev.dependencies]
 commitizen = '^3.2.2'
 pre-commit = '^3.3.2'
+
+[[tool.poetry.packages]]
+from = 'src'
+include = 'cicd-tools'
+
+[[tool.poetry.packages]]
+from = 'src'
+include = 'cicd_tools_pre_commit'
+
+[tool.poetry.scripts]
+with-cicd-resources = 'cicd_tools_pre_commit:with_cicd_resources'
+
+[tool.ruff]
+exclude = ['.git', '__pycache__']
+indent-width = 4
+line-length = 80
+
+[tool.ruff.format]
+quote-style = 'double'
+
+[tool.ruff.lint]
+fixable = ['ALL']
+future-annotations = true
+ignore = ['D105', 'D107', 'D203', 'D213']
+select = ['ARG001', 'ANN', 'D', 'DJ', 'E', 'F', 'I', 'Q']
+unfixable = []
+
+[tool.ruff.lint.flake8-type-checking]
+quote-annotations = false
+
+[tool.ruff.lint.isort]
+default-section = 'first-party'
+length-sort = false
+no-lines-before = ['local-folder']
+section-order = ['future', 'standard-library', 'third-party', 'first-party', 'local-folder']
+
+[tool.ruff.lint.per-file-ignores]
+'*/tests/*.py' = ['ANN', 'D']
+
+[tool.ruff.lint.pylint]
+max-args = 6
