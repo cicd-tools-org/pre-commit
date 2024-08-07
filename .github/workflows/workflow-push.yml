@@ -159,6 +159,45 @@ jobs:
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
+  python_formatting:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
+    with:
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PRECOMMIT_HOOK_ID: "black"
+      PRECOMMIT_HOOK_NAME: "Python Formatting"
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
+  python_import_sorting:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
+    with:
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PRECOMMIT_HOOK_ID: "isort"
+      PRECOMMIT_HOOK_NAME: "Python Import Sorting"
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
+  python_test:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-40-poetry-run_cached_commands.yml@main
+    with:
+      COMMANDS: |
+        make test-python
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
   toml_lint:
     needs:
       - configuration
@@ -220,6 +259,9 @@ jobs:
       - markdown_lint
       - markdown_spelling
       - pre-commit_hooks
+      - python_formatting
+      - python_import_sorting
+      - python_test
       - security
       - start
       - spelling_vocabularies

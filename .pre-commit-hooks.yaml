@@ -29,6 +29,26 @@
   always_run: true
   require_serial: true
   stages: [manual]
+- id: cicd-tools-schema-cookiecutter
+  name: cicd-tools-schema-cookiecutter
+  description: "Verify a JSON file against the CICD-Tools cookiecutter schema."
+  entry: with-cicd-resources check-jsonschema
+  args:
+    - "--schemafile"
+    - "{CICD_RESOURCES}/schemas/cookiecutter.json"
+  language: python
+  pass_filenames: true
+  stages: [commit]
+- id: cicd-tools-schema-manifest
+  name: cicd-tools-schema-manifest
+  description: "Verify a JSON file against the CICD-Tools manifest schema."
+  entry: with-cicd-resources check-jsonschema
+  args:
+    - "--schemafile"
+    - "{CICD_RESOURCES}/schemas/manifest.json"
+  language: python
+  pass_filenames: true
+  stages: [commit]
 - id: commitizen-pre-bump
   name: commitizen-pre-bump
   description: "TOML quote formatting for commitizen."
