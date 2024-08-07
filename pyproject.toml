@@ -13,15 +13,28 @@ version_provider = 'poetry'
 [tool.poetry]
 authors = ['Niall Byrne <niall@niallbyrne.ca>']
 description = 'Hooks for CICD-Tools.'
+include = ['cicd-tools/**/*']
 name = 'cicd-tools-pre-commit'
 readme = 'README.md'
 version = '0.5.0'
 
 [tool.poetry.dependencies]
-python = '^3.9'
+check-jsonschema = '^0.29.1'
+python = '>=3.8,<4.0'
 
 [tool.poetry.group]
 [tool.poetry.group.dev]
 [tool.poetry.group.dev.dependencies]
 commitizen = '^3.2.2'
 pre-commit = '^3.3.2'
+
+[[tool.poetry.packages]]
+from = 'src'
+include = 'cicd-tools'
+
+[[tool.poetry.packages]]
+from = 'src'
+include = 'cicd_tools_pre_commit'
+
+[tool.poetry.scripts]
+with-cicd-resources = 'cicd_tools_pre_commit:main'
