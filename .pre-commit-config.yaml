@@ -39,7 +39,7 @@ repos:
           - "./.yamllint.yml"
         stages: [pre-commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: ec60458b77727e575576c7af58f5916e0343f340
+    rev: b88317b4d47c736a509994d05e0df4d5d9389f1b
     hooks:
       - id: cicd-tools-box
       - id: cicd-tools-key
