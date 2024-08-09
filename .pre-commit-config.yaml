@@ -12,7 +12,7 @@ repos:
         args:
           - "--schemafile"
           - ".github/config/schemas/workflows/workflow-push.json"
-        stages: [commit]
+        stages: [pre-commit]
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.2.2
     hooks:
@@ -25,7 +25,7 @@ repos:
         args:
           - "-c"
           - "./.yamllint.yml"
-        stages: [commit]
+        stages: [pre-commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
     rev: ec60458b77727e575576c7af58f5916e0343f340
     hooks:
