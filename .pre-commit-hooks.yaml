@@ -188,6 +188,28 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: pre-commit-sort-config
+  name: "pre-commit-sort-config"
+  description: "Sort the hooks inside your pre-commit configuration files."
+  entry: ./src/pre-commit/pre-commit-sort-config.sh
+  args:
+    - "ghcr.io/cicd-tools-org/cicd-tools:main"
+  files: "^(.+/)*\\.pre-commit-config\\.yaml$"
+  language: script
+  pass_filenames: true
+  require_serial: true
+  stages: [commit]
+- id: pre-commit-sort-hooks
+  name: "pre-commit-sort-hooks"
+  description: "Sort the hooks inside your pre-commit hook definition files."
+  entry: ./src/pre-commit/pre-commit-sort-hooks.sh
+  args:
+    - "ghcr.io/cicd-tools-org/cicd-tools:main"
+  files: "^(.+/)*\\.pre-commit-hooks\\.yaml$"
+  language: script
+  pass_filenames: true
+  require_serial: true
+  stages: [commit]
 - id: security-credentials
   name: security-credentials
   description: "Scan codebase for checked in credentials."

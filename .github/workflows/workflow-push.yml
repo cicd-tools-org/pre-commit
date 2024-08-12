@@ -159,6 +159,32 @@ jobs:
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
+  pre-commit_config_sorting:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
+    with:
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PRECOMMIT_HOOK_ID: "pre-commit-sort-config"
+      PRECOMMIT_HOOK_NAME: "Pre-Commit Config"
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
+  pre-commit_hooks_sorting:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
+    with:
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PRECOMMIT_HOOK_ID: "pre-commit-sort-hooks"
+      PRECOMMIT_HOOK_NAME: "Pre-Commit Hooks"
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
   python_formatting:
     needs:
       - configuration
@@ -259,6 +285,8 @@ jobs:
       - markdown_lint
       - markdown_spelling
       - pre-commit_hooks
+      - pre-commit_config_sorting
+      - pre-commit_hooks_sorting
       - python_formatting
       - python_import_sorting
       - python_test
