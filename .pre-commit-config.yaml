@@ -27,7 +27,7 @@ repos:
           - "./.yamllint.yml"
         stages: [commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: bb8848e1652b87869415847e78fa980bb6f2e0a0
+    rev: 61f080f7bf1314d6b13df2c3ae4a48e5c6abee32
     hooks:
       - id: format-toml
       - id: git-conflict-markers
