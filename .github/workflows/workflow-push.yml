@@ -224,6 +224,28 @@ jobs:
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
+  shell_lint:
+    needs:
+      - configuration
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    strategy:
+      fail-fast: true
+      matrix:
+        hook:
+          - id: "format-shell"
+            name: "Shell Formatting"
+          - id: "lint-shell"
+            name: "Shell Linting"
+      max-parallel: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+    uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
+    with:
+      CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      PRECOMMIT_HOOK_ID: ${{ matrix.hook.id }}
+      PRECOMMIT_HOOK_NAME: ${{ matrix.hook.name }}
+      PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
+      VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
+
   toml_lint:
     needs:
       - configuration
@@ -292,6 +314,7 @@ jobs:
       - python_test
       - security
       - start
+      - shell_lint
       - spelling_vocabularies
       - toml_lint
       - workflow_lint
