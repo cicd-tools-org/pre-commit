@@ -1,4 +1,13 @@
 ---
+- id: 10-sphinx-build-html
+  name: "sphinx-build-html"
+  description: "Build the Sphinx HTML documentation for this project. (This hook may be required to run BEFORE other Sphinx hooks)."
+  entry: ./src/pre-commit/documentation-sphinx.sh build
+  files: "^.+\\.(py|rst)$|^.vale/.+$"
+  language: script
+  pass_filenames: false
+  require_serial: true
+  stages: [commit]
 - id: cicd-tools-box
   name: cicd-tools-box
   description: "Install a CICD-Tools toolbox from the gpg key verified manifest."
@@ -266,6 +275,15 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: spelling-sphinx-html
+  name: "spelling-sphinx-html"
+  description: "Spellcheck the built the Sphinx HTML documentation."
+  entry: ./src/pre-commit/documentation-sphinx.sh spell_check -i ghcr.io/cicd-tools-org/cicd-tools:main
+  files: "^.+\\.(py|rst)$|^.vale/.+$"
+  language: script
+  pass_filenames: false
+  require_serial: true
+  stages: [commit]
 - id: spelling-vale-sync
   name: spelling-vale-sync
   description: "Download any required vale packages."
@@ -281,4 +299,31 @@
   entry: sh -c 'for FILE in "$@"; do sort -u -o ${FILE} ${FILE}; done' --
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
+  stages: [commit]
+- id: sphinx-translations-add
+  name: "sphinx-translations-add"
+  description: "Add new languages to the Sphinx documentation for this project."
+  entry: ./src/pre-commit/documentation-sphinx.sh add
+  always_run: true
+  language: script
+  pass_filenames: false
+  require_serial: true
+  stages: [manual]
+- id: sphinx-translations-missing
+  name: "sphinx-translations-missing"
+  description: "Check all Sphinx '.po' files for untranslated strings."
+  entry: ./src/pre-commit/documentation-sphinx.sh missing
+  files: "^.+\\.(po|py|rst)$"
+  language: script
+  pass_filenames: false
+  require_serial: true
+  stages: [commit]
+- id: sphinx-translations-update
+  name: "sphinx-translations-update"
+  description: "Extract translatable strings from the documentation and regenerate '.po' files."
+  entry: ./src/pre-commit/documentation-sphinx.sh update
+  files: "^.+\\.(py|rst)$"
+  language: script
+  pass_filenames: false
+  require_serial: true
   stages: [commit]
