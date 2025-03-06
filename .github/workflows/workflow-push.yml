@@ -45,6 +45,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "spelling-vale-vocab"
       PRECOMMIT_HOOK_NAME: "Spelling vocabularies"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -58,6 +59,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "git-conflict-markers"
       PRECOMMIT_HOOK_NAME: "Git conflict markers"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -83,6 +85,7 @@ jobs:
       CHECK_TOML: true
       CHECK_WORKFLOW: true
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
@@ -97,6 +100,7 @@ jobs:
         poetry run cz check --rev-range "${PUSHED_COMMIT_REV_RANGE}"
       COMMAND_NAME: "Commit Message Lint"
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       REV_RANGE: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_commitizen_rev_range }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
@@ -115,6 +119,7 @@ jobs:
         poetry run pre-commit run --hook-stage commit-msg spelling-commit-message --commit-msg-filename "${CICD_COMMIT_MESSAGES_FILE}"
       COMMAND_NAME: "Commit Message Spelling"
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       REV_RANGE: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_commit_spelling_rev_range }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
@@ -127,6 +132,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "check-jsonschema"
       PRECOMMIT_HOOK_NAME: "Workflow Config JSON Schema Linting"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -140,6 +146,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "lint-markdown"
       PRECOMMIT_HOOK_NAME: "Markdown Linting"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -153,6 +160,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRE_HOOK_COMMAND: poetry run pre-commit run --hook-stage manual spelling-vale-sync
       PRECOMMIT_HOOK_ID: "spelling-markdown"
       PRECOMMIT_HOOK_NAME: "Markdown Spelling"
@@ -167,6 +175,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "pre-commit-sort-config"
       PRECOMMIT_HOOK_NAME: "Pre-Commit Config"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -180,6 +189,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "pre-commit-sort-hooks"
       PRECOMMIT_HOOK_NAME: "Pre-Commit Hooks"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -193,6 +203,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "black"
       PRECOMMIT_HOOK_NAME: "Python Formatting"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -206,6 +217,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "isort"
       PRECOMMIT_HOOK_NAME: "Python Import Sorting"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -221,6 +233,7 @@ jobs:
       COMMANDS: |
         make test-python
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
@@ -241,6 +254,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: ${{ matrix.hook.id }}
       PRECOMMIT_HOOK_NAME: ${{ matrix.hook.name }}
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -254,6 +268,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "format-toml"
       PRECOMMIT_HOOK_NAME: "TOML Formatting"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -276,6 +291,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: ${{ matrix.hook.id }}
       PRECOMMIT_HOOK_NAME: ${{ matrix.hook.name }}
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
@@ -289,6 +305,7 @@ jobs:
     uses: cicd-tools-org/cicd-tools/.github/workflows/job-80-poetry-precommit_commit_stage_hook.yml@main
     with:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
+      INSTALL_PROJECT: true
       PRECOMMIT_HOOK_ID: "yamllint"
       PRECOMMIT_HOOK_NAME: "YAML Linting"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
