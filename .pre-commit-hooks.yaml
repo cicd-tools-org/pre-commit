@@ -8,9 +8,9 @@
     - "0.1.0"
     - "-m"
     - "https://raw.githubusercontent.com/cicd-tools-org/manifest/main/manifest.json.asc"
+  always_run: true
   language: script
   pass_filenames: false
-  always_run: true
   require_serial: true
   stages: [manual]
 - id: cicd-tools-key
@@ -24,9 +24,9 @@
     - "hkps://keys.openpgp.org"
     - "-s"
     - "keyserver.ubuntu.com"
+  always_run: true
   language: script
   pass_filenames: false
-  always_run: true
   require_serial: true
   stages: [manual]
 - id: cicd-tools-schema-cookiecutter
@@ -53,9 +53,9 @@
   name: commitizen-pre-bump
   description: "TOML quote formatting for commitizen."
   entry: ./src/pre-commit/commitizen-pre-bump.sh
+  always_run: true
   language: script
   pass_filenames: false
-  always_run: true
   require_serial: true
   stages: [manual]
 - id: format-shell
@@ -84,38 +84,38 @@
   name: "gettext-translations-add"
   description: "Add new languages to the project folder structure for gettext."
   entry: ./src/pre-commit/gettext-translations.sh add -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  always_run: true
   language: script
   pass_filenames: false
-  always_run: true
   require_serial: true
   stages: [manual]
 - id: gettext-translations-compile
   name: "gettext-translations-compile"
   description: "Compile gettext '.po' files into '.mo' files for distribution."
   entry: ./src/pre-commit/gettext-translations.sh compile -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  always_run: true
   language: script
   pass_filenames: false
-  always_run: true
   require_serial: true
   stages: [manual]
 - id: gettext-translations-missing
   name: "gettext-translations-missing"
   description: "Check all gettext '.po' files for untranslated strings."
   entry: ./src/pre-commit/gettext-translations.sh missing -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  always_run: true
   files: "^.+\\.py$"
   language: script
   pass_filenames: false
-  always_run: true
   require_serial: true
   stages: [commit]
 - id: gettext-translations-update
   name: "gettext-translations-update"
   description: "Extract translatable strings from the code base with gettext and regenerate '.pot' and '.po' files."
   entry: ./src/pre-commit/gettext-translations.sh update -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
+  always_run: true
   files: "^.+\\.py$"
   language: script
   pass_filenames: false
-  always_run: true
   require_serial: true
   stages: [commit]
 - id: git-conflict-markers
@@ -128,21 +128,13 @@
     - --check
   language: system
   stages: [commit]
-- id: lint-ansible
-  name: lint-ansible
-  description: "Check the collection or role for Ansible best practices."
-  entry: ./.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh
-  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
-  language: system
-  pass_filenames: false
-  stages: [commit]
 - id: lint-dockerfile
   name: lint-dockerfile
   description: "Lint the project's Dockerfiles."
   entry: --entrypoint=hadolint ghcr.io/cicd-tools-org/cicd-tools:main
-  types: ["dockerfile"]
   language: docker_image
   stages: [commit]
+  types: ["dockerfile"]
 - id: lint-github-workflow
   name: lint-github-workflow
   description: "Lint the project's GitHub workflow files."
@@ -188,6 +180,37 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: poetry-lint-ansible
+  # Add ansible-lint to your poetry environment to use this hook.
+  name: poetry-lint-ansible
+  description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
+  entry: ./src/pre-commit/lint-ansible.sh
+  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
+  language: script
+  pass_filenames: false
+  stages: [commit]
+- id: poetry-lint-python
+  # Add pylint to your poetry environment to use this hook.
+  name: "poetry-lint-python"
+  description: "Lint the project's Python files using pylint from the local poetry environment."
+  entry: poetry run pylint
+  files: "^.+\\.py$"
+  language: system
+  stages: [commit]
+- id: poetry-types-python
+  # Add mypy to your poetry environment to use this hook.
+  name: "types-python"
+  description: "Type check the project's Python files using mypy from the local poetry environment."
+  entry: poetry run mypy
+  args:
+    - "--strict"
+    - "--show-error-codes"
+    - "--implicit-reexport"
+    - "--explicit-package-bases"
+  files: "^.+\\.pyi?$"
+  language: system
+  require_serial: true
+  stages: [commit]
 - id: pre-commit-sort-config
   name: "pre-commit-sort-config"
   description: "Sort the hooks inside your pre-commit configuration files."
@@ -230,10 +253,10 @@
   entry: ./src/pre-commit/spelling-commit-message.sh
   args:
     - "ghcr.io/cicd-tools-org/cicd-tools:main"
+  always_run: true
   language: script
   pass_filenames: true
   require_serial: true
-  always_run: true
   stages: [commit-msg]
 - id: spelling-markdown
   name: spelling-markdown
@@ -249,8 +272,8 @@
   entry: -v /tmp:/tmp --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
   args:
     - "sync"
-  language: docker_image
   always_run: true
+  language: docker_image
   pass_filenames: false
   stages: [manual]
 - id: spelling-vale-vocab
@@ -259,34 +282,3 @@
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
   stages: [commit]
-- id: poetry-lint-ansible
-  # Add ansible-lint to your poetry environment to use this hook.
-  name: poetry-lint-ansible
-  description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
-  entry: ./src/pre-commit/lint-ansible.sh
-  language: script
-  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
-  pass_filenames: false
-  stages: [commit]
-- id: poetry-lint-python
-  # Add pylint to your poetry environment to use this hook.
-  name: "poetry-lint-python"
-  description: "Lint the project's Python files using pylint from the local poetry environment."
-  entry: poetry run pylint
-  language: system
-  files: "^.+\\.py$"
-  stages: [commit]
-- id: poetry-types-python
-  # Add mypy to your poetry environment to use this hook.
-  name: "types-python"
-  description: "Type check the project's Python files using mypy from the local poetry environment."
-  entry: poetry run mypy
-  args:
-    - "--strict"
-    - "--show-error-codes"
-    - "--implicit-reexport"
-    - "--explicit-package-bases"
-  language: system
-  files: "^.+\\.pyi?$"
-  stages: [commit]
-  require_serial: true

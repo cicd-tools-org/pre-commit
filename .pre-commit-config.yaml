@@ -3,35 +3,6 @@ default_install_hook_types:
   - pre-commit
   - commit-msg
 repos:
-  - repo: https://github.com/psf/black
-    rev: 24.8.0
-    hooks:
-      - id: black
-        args:
-          - "--safe"
-          - "-l"
-          - "80"
-        stages: [commit]
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.22.0
-    hooks:
-      - id: check-jsonschema
-        name: check-github-workflow-push-schema
-        files: "^\\.github/config/workflows/workflow-push.json$"
-        args:
-          - "--schemafile"
-          - ".github/config/schemas/workflows/workflow-push.json"
-        stages: [commit]
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.2.2
-    hooks:
-      - id: commitizen
-        stages: [commit-msg]
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.0
-    hooks:
-      - id: isort
-        stages: [commit]
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.32.0
     hooks:
@@ -41,7 +12,7 @@ repos:
           - "./.yamllint.yml"
         stages: [commit]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: 61f080f7bf1314d6b13df2c3ae4a48e5c6abee32
+    rev: e58ac73ff0825ab646c16f4a1de308ec19fe5c7e
     hooks:
       - id: cicd-tools-box
       - id: cicd-tools-key
@@ -54,8 +25,39 @@ repos:
       - id: lint-markdown
       - id: lint-shell
         exclude: "^\\.cicd-tools/boxes/disabled$"
+      - id: pre-commit-sort-config
+      - id: pre-commit-sort-hooks
       - id: security-credentials
       - id: spelling-commit-message
       - id: spelling-markdown
       - id: spelling-vale-sync
       - id: spelling-vale-vocab
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.2.2
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        args:
+          - "--safe"
+          - "-l"
+          - "80"
+        stages: [commit]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.0
+    hooks:
+      - id: isort
+        stages: [commit]
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.22.0
+    hooks:
+      - id: check-jsonschema
+        name: check-github-workflow-push-schema
+        files: "^\\.github/config/workflows/workflow-push.json$"
+        args:
+          - "--schemafile"
+          - ".github/config/schemas/workflows/workflow-push.json"
+        stages: [commit]
