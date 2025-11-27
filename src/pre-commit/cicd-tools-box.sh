@@ -107,7 +107,14 @@ _toolbox_args() {
 _toolbox_box_checksum() {
   pushd "${TOOLBOX_TEMP_DIRECTORY}" >> /dev/null
   if [[ "${TOOLBOX_MANIFEST_DISABLE_SECURITY}" == "false" ]]; then
-    if ! echo "${TARGET_TOOLBOX_SHA}  ${TARGET_TOOLBOX_FILENAME}" | sha256sum -c; then
+
+    # DEBUG
+    echo "TARGET_TOOLBOX_SHA=${TARGET_TOOLBOX_SHA}"
+    echo "TARGET_TOOLBOX_FILENAME=${TARGET_TOOLBOX_FILENAME}"
+    echo "${TARGET_TOOLBOX_SHA}  ${TARGET_TOOLBOX_FILENAME}" > check
+    sha256sum -c check
+
+    if ! echo "${TARGET_TOOLBOX_SHA}  ${TARGET_TOOLBOX_FILENAME}" | sha256sum -c -; then
       log "ERROR" "CHECKSUM > Hash of remote file does not match!"
       log "ERROR" "CHECKSUM > Cannot proceed."
       exit 127
