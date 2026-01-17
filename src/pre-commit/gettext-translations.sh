@@ -31,7 +31,7 @@ _gettext_translations_args() {
   GETTEXT_TRANSLATIONS_COMMAND="${1}"
   shift
 
-  while getopts "b:c:e:i:m:p:r:s:u" OPTION; do
+  while getopts "b:c:e:i:m:p:r:s:ux:" OPTION; do
     case "${OPTION}" in
       b)
         GETTEXT_TRANSLATIONS_EXTRACTION_FILE_NAME="${OPTARG}"
@@ -59,6 +59,9 @@ _gettext_translations_args() {
         ;;
       u)
         GETTEXT_TRANSLATIONS_UTF8_OVERRIDE="1"
+        ;;
+      x)
+        GETTEXT_TRANSLATIONS_XGETTEXT_ARGS+=("${OPTARG}")
         ;;
       \?)
         _gettext_translations_usage
@@ -183,6 +186,7 @@ _gettext_translations_generate_or_update_pot_file() {
     --sort-by-file \
     -d "${GETTEXT_TRANSLATIONS_EXTRACTION_FILE_NAME}" \
     -o "${GETTEXT_TRANSLATIONS_EXTRACTED_TEMP_FILE}" \
+    "${GETTEXT_TRANSLATIONS_XGETTEXT_ARGS[@]}" \
     "${GETTEXT_TRANSLATIONS_SOURCE_FILES[@]}"
 
   if [[ ! -f "${GETTEXT_TRANSLATIONS_BASE_POT_FILE}" ]]; then
@@ -315,6 +319,7 @@ _gettext_translations_usage_update() {
   log "ERROR" "               -e [CONTACT EMAIL (written to .po and .pot files)]"
   log "ERROR" "               -r [CODE BASE REGEX (defaults to '*.py')]"
   log "ERROR" "               -u (optionally set the CHARSET to UTF-8)"
+  log "ERROR" "               -x [EXTRA ARG (optionally append an extra arg to xgettext]"
 }
 
 gettext_translations_add() {
@@ -517,11 +522,13 @@ main() {
   local GETTEXT_TRANSLATIONS_EXTRACTION_FILE_NAME
   local GETTEXT_TRANSLATIONS_LANGUAGES_BEING_SKIPPED
   local GETTEXT_TRANSLATIONS_UTF8_OVERRIDE
+  local GETTEXT_TRANSLATIONS_XGETTEXT_ARGS
 
   GETTEXT_TRANSLATIONS_CODE_BASE_REGEX="*.py"
   GETTEXT_TRANSLATIONS_EMPTY_MESSAGE_MATCH='msgstr ""'
   GETTEXT_TRANSLATIONS_EXTRACTION_FILE_NAME="base"
   GETTEXT_TRANSLATIONS_LANGUAGES_BEING_SKIPPED=()
+  GETTEXT_TRANSLATIONS_XGETTEXT_ARGS=()
 
   _gettext_translations_args "$@"
 
