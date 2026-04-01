@@ -67,8 +67,8 @@
     - "--indent=2"
     - "-ci"
     - "-sr"
-  exclude: "^\\.cicd-tools/boxes/.+$"
-  files: "^.+\\.(bash|sh)$"
+  exclude: "^\.cicd-tools/boxes/.+$"
+  files: "^.+\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
   stages: [commit]
@@ -76,7 +76,7 @@
   name: format-toml
   description: "Format the project's TOML files."
   entry: --entrypoint=tomll --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:main
-  files: "^.+\\.toml$"
+  files: "^.+\.toml$"
   language: docker_image
   pass_filenames: true
   stages: [commit]
@@ -103,7 +103,7 @@
   description: "Check all gettext '.po' files for untranslated strings."
   entry: ./src/pre-commit/gettext-translations.sh missing -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   always_run: true
-  files: "^.+\\.py$"
+  files: "^.+\.py$"
   language: script
   pass_filenames: false
   require_serial: true
@@ -113,7 +113,7 @@
   description: "Extract translatable strings from the code base with gettext and regenerate '.pot' and '.po' files."
   entry: ./src/pre-commit/gettext-translations.sh update -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   always_run: true
-  files: "^.+\\.py$"
+  files: "^.+\.py$"
   language: script
   pass_filenames: false
   require_serial: true
@@ -143,7 +143,7 @@
     - "-color"
     - "-config-file"
     - ".cicd-tools/configuration/actionlint.yaml"
-  files: "^.github/workflows/.+\\.(yaml|yml)$"
+  files: "^.github/workflows/.+\.(yaml|yml)$"
   language: docker_image
   pass_filenames: false
   stages: [commit]
@@ -151,14 +151,14 @@
   name: lint-github-workflow-header
   description: "Lint the headers of the project's GitHub workflow files."
   entry: ./src/pre-commit/lint-github-workflow-header.sh
-  files: "^.github/workflows/.+\\.(yaml|yml)$"
+  files: "^.github/workflows/.+\.(yaml|yml)$"
   language: script
   pass_filenames: true
   stages: [commit]
 - id: lint-markdown
   name: lint-markdown
   description: "Lint the Markdown files."
-  files: "^.+\\.md$"
+  files: "^.+\.md$"
   entry: ghcr.io/igorshubovych/markdownlint-cli:v0.35.0@sha256:22cf4699a448a7bbc311a940e0600019423d7671cbedae9c35cd32b51f560350
   args:
     - "-c"
@@ -175,8 +175,8 @@
     - "--source-path=SCRIPTDIR"
     - "--exclude=SC2317"
     - "-x"
-  exclude: "^\\.cicd-tools/boxes/.+$"
-  files: "^.+\\.(bash|sh)$"
+  exclude: "^\.cicd-tools/boxes/.+$"
+  files: "^.+\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
   stages: [commit]
@@ -185,7 +185,7 @@
   name: poetry-lint-ansible
   description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
   entry: ./src/pre-commit/lint-ansible.sh
-  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
+  files: "^.+\.(yaml|yml)$|^.ansible-lint$"
   language: script
   pass_filenames: false
   stages: [commit]
@@ -194,9 +194,17 @@
   name: "poetry-lint-python"
   description: "Lint the project's Python files using pylint from the local poetry environment."
   entry: poetry run pylint
-  files: "^.+\\.py$"
+  files: "^.+\.py$"
   language: system
   stages: [commit]
+- id: poetry-sphinx-build-language
+  name: poetry-sphinx-build-language
+  description: "Build sphinx documentation for a specific language using poetry."
+  entry: sphinx_build_language
+  language: python
+  pass_filenames: false
+  require_serial: true
+  stages: [manual]
 - id: poetry-types-python
   # Add mypy to your poetry environment to use this hook.
   name: "types-python"
@@ -207,7 +215,7 @@
     - "--show-error-codes"
     - "--implicit-reexport"
     - "--explicit-package-bases"
-  files: "^.+\\.pyi?$"
+  files: "^.+\.pyi?$"
   language: system
   require_serial: true
   stages: [commit]
@@ -217,7 +225,7 @@
   entry: ./src/pre-commit/pre-commit-sort-config.sh
   args:
     - "ghcr.io/cicd-tools-org/cicd-tools:main"
-  files: "^(.+/)*\\.pre-commit-config\\.yaml$"
+  files: "^(.+/)*\.pre-commit-config\.yaml$"
   language: script
   pass_filenames: true
   require_serial: true
@@ -228,7 +236,7 @@
   entry: ./src/pre-commit/pre-commit-sort-hooks.sh
   args:
     - "ghcr.io/cicd-tools-org/cicd-tools:main"
-  files: "^(.+/)*\\.pre-commit-hooks\\.yaml$"
+  files: "^(.+/)*\.pre-commit-hooks\.yaml$"
   language: script
   pass_filenames: true
   require_serial: true
@@ -262,7 +270,7 @@
   name: spelling-markdown
   description: "Spellcheck the Markdown files."
   entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
-  files: "^.+\\.md$|^.vale/Vocab/\\.+$"
+  files: "^.+\.md$|^.vale/Vocab/\.+$"
   language: docker_image
   pass_filenames: true
   stages: [commit]
@@ -278,15 +286,7 @@
   stages: [manual]
 - id: spelling-vale-vocab
   name: "spelling-vale-vocab"
-  entry: sh -c 'for FILE in "$@"; do sort -u -o ${FILE} ${FILE}; done' --
-  files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
+  entry: sh -c 'for FILE in ""; do sort -u -o  ; done' --
+  files: "^.vale/Vocab/.+/(accept|reject)\.txt$"
   language: system
   stages: [commit]
-- id: poetry-sphinx-build-language
-  name: poetry-sphinx-build-language
-  description: "Build sphinx documentation for a specific language using poetry."
-  entry: sphinx_build_language
-  language: python
-  pass_filenames: false
-  require_serial: true
-  stages: [manual]
