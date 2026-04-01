@@ -6,7 +6,7 @@ import argparse
 import os
 
 from .system import call
-from .system.argparse_types import existing_directory, valid_path
+from .system.argparse_types import existing_directory, language_code, valid_path
 
 
 def sphinx_build_language() -> None:
@@ -15,7 +15,11 @@ def sphinx_build_language() -> None:
         description="Build sphinx documentation for a specific language."
     )
     parser.add_argument(
-        "-l", "--language", required=True, help="The target language (e.g. EN)"
+        "-l",
+        "--language",
+        required=True,
+        type=language_code,
+        help="The target language (e.g. EN)",
     )
     parser.add_argument(
         "-t",
@@ -33,11 +37,6 @@ def sphinx_build_language() -> None:
     )
 
     args = parser.parse_args()
-
-    if len(args.language) != 2:
-        parser.error(
-            f"Language '{args.language}' must be a 2 character string."
-        )
 
     target_build_folder = os.path.join(args.build, args.language)
     command = [

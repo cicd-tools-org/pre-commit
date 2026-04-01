@@ -23,3 +23,12 @@ def valid_path(path: str) -> str:
             f"The parent directory of '{path}' does not exist."
         )
     return path
+
+
+def language_code(code: str) -> str:
+    """Check if the language code is exactly 2 characters long."""
+    if len(code) != 2:
+        raise argparse.ArgumentTypeError(
+            f"Language code '{code}' must be exactly 2 characters long."
+        )
+    return code

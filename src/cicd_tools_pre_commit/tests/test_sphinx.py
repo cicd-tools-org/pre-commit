@@ -11,64 +11,41 @@ from cicd_tools_pre_commit.sphinx import sphinx_build_language
 class TestSphinx(unittest.TestCase):
     """Test the sphinx_build_language function."""
 
+    @patch(
+        "sys.argv",
+        ["sphinx_build_language", "-l", "EN", "-t", "source", "-b", "build"],
+    )
     @patch("cicd_tools_pre_commit.sphinx.call")
     @patch("os.path.isdir")
     @patch("os.path.exists")
-    @patch("sys.argv")
     def test_sphinx_build_language_success(
-        self, mock_argv, mock_exists, mock_isdir, mock_call
+        self, mock_exists, mock_isdir, mock_call
     ):
         """Test successful execution of sphinx_build_language."""
-        mock_argv.__getitem__.side_effect = (
-            lambda s: [
-                "sphinx_build_language",
-                "-l",
-                "EN",
-                "-t",
-                "source",
-                "-b",
-                "build",
-            ][s]
-        )
-        mock_argv.__len__.return_value = 7
-        mock_argv.__iter__.return_value = iter(
-            ["sphinx_build_language", "-l", "EN", "-t", "source", "-b", "build"]
-        )
+        mock_isdir.return_value = True
+        mock_exists.return_value = True
 
-        # Patch sys.argv directly instead of mocking it like above which
-        # is complex
-        with patch(
-            "sys.argv",
+        sphinx_build_language()
+
+        mock_call.assert_called_once_with(
             [
-                "sphinx_build_language",
-                "-l",
-                "EN",
-                "-t",
-                "source",
+                "poetry",
+                "run",
+                "sphinx-build",
+                "-Ea",
                 "-b",
-                "build",
-            ],
-        ):
-            mock_isdir.return_value = True
-            mock_exists.return_value = True
+                "html",
+                "-D",
+                "language=EN",
+                "source",
+                "build/EN",
+            ]
+        )
 
-            sphinx_build_language()
-
-            mock_call.assert_called_once_with(
-                [
-                    "poetry",
-                    "run",
-                    "sphinx-build",
-                    "-Ea",
-                    "-b",
-                    "html",
-                    "-D",
-                    "language=EN",
-                    "source",
-                    "build/EN",
-                ]
-            )
-
+    @patch(
+        "sys.argv",
+        ["sphinx_build_language", "-l", "ENG", "-t", "source", "-b", "build"],
+    )
     @patch("cicd_tools_pre_commit.sphinx.call")
     @patch("argparse.ArgumentParser.error")
     @patch("os.path.isdir")
@@ -78,28 +55,29 @@ class TestSphinx(unittest.TestCase):
     ):
         """Test sphinx_build_language with invalid language."""
         mock_error.side_effect = SystemExit(2)
-        with patch(
-            "sys.argv",
-            [
-                "sphinx_build_language",
-                "-l",
-                "ENG",
-                "-t",
-                "source",
-                "-b",
-                "build",
-            ],
-        ):
-            mock_isdir.return_value = True
-            mock_exists.return_value = True
-            with self.assertRaises(SystemExit):
-                sphinx_build_language()
-            mock_error.assert_called_once()
-            self.assertIn(
-                "must be a 2 character string", mock_error.call_args[0][0]
-            )
-            mock_call.assert_not_called()
+        mock_isdir.return_value = True
+        mock_exists.return_value = True
 
+        with self.assertRaises(SystemExit):
+            sphinx_build_language()
+        mock_error.assert_called_once()
+        self.assertIn(
+            "must be exactly 2 characters long", mock_error.call_args[0][0]
+        )
+        mock_call.assert_not_called()
+
+    @patch(
+        "sys.argv",
+        [
+            "sphinx_build_language",
+            "-l",
+            "EN",
+            "-t",
+            "nonexistent",
+            "-b",
+            "build",
+        ],
+    )
     @patch("cicd_tools_pre_commit.sphinx.call")
     @patch("argparse.ArgumentParser.error")
     @patch("os.path.isdir")
@@ -109,29 +87,30 @@ class TestSphinx(unittest.TestCase):
     ):
         """Test sphinx_build_language with invalid source."""
         mock_error.side_effect = SystemExit(2)
-        with patch(
-            "sys.argv",
-            [
-                "sphinx_build_language",
-                "-l",
-                "EN",
-                "-t",
-                "nonexistent",
-                "-b",
-                "build",
-            ],
-        ):
-            mock_isdir.return_value = False
-            mock_exists.return_value = True
-            with self.assertRaises(SystemExit):
-                sphinx_build_language()
-            mock_error.assert_called_once()
-            self.assertIn(
-                "The directory 'nonexistent' does not exist",
-                mock_error.call_args[0][0],
-            )
-            mock_call.assert_not_called()
+        mock_isdir.return_value = False
+        mock_exists.return_value = True
 
+        with self.assertRaises(SystemExit):
+            sphinx_build_language()
+        mock_error.assert_called_once()
+        self.assertIn(
+            "The directory 'nonexistent' does not exist",
+            mock_error.call_args[0][0],
+        )
+        mock_call.assert_not_called()
+
+    @patch(
+        "sys.argv",
+        [
+            "sphinx_build_language",
+            "-l",
+            "EN",
+            "-t",
+            "source",
+            "-b",
+            "/invalid/path/build",
+        ],
+    )
     @patch("cicd_tools_pre_commit.sphinx.call")
     @patch("argparse.ArgumentParser.error")
     @patch("os.path.isdir")
@@ -142,27 +121,15 @@ class TestSphinx(unittest.TestCase):
     ):
         """Test sphinx_build_language with invalid build path."""
         mock_error.side_effect = SystemExit(2)
-        with patch(
-            "sys.argv",
-            [
-                "sphinx_build_language",
-                "-l",
-                "EN",
-                "-t",
-                "source",
-                "-b",
-                "/invalid/path/build",
-            ],
-        ):
-            mock_isdir.return_value = True
-            mock_abspath.side_effect = lambda x: x
-            mock_exists.return_value = False  # For the parent dir
+        mock_isdir.return_value = True
+        mock_abspath.side_effect = lambda x: x
+        mock_exists.return_value = False  # For the parent dir
 
-            with self.assertRaises(SystemExit):
-                sphinx_build_language()
-            mock_error.assert_called_once()
-            self.assertIn(
-                "The parent directory of '/invalid/path/build' does not exist",
-                mock_error.call_args[0][0],
-            )
-            mock_call.assert_not_called()
+        with self.assertRaises(SystemExit):
+            sphinx_build_language()
+        mock_error.assert_called_once()
+        self.assertIn(
+            "The parent directory of '/invalid/path/build' does not exist",
+            mock_error.call_args[0][0],
+        )
+        mock_call.assert_not_called()
