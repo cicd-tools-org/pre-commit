@@ -6,6 +6,7 @@ import argparse
 import os
 
 from .system import call
+from .system.argparse_types import existing_directory, valid_path
 
 
 def sphinx_build_language() -> None:
@@ -17,10 +18,18 @@ def sphinx_build_language() -> None:
         "-l", "--language", required=True, help="The target language (e.g. EN)"
     )
     parser.add_argument(
-        "-t", "--source", required=True, help="The source folder"
+        "-t",
+        "--source",
+        required=True,
+        type=existing_directory,
+        help="The source folder",
     )
     parser.add_argument(
-        "-b", "--build", required=True, help="The build folder"
+        "-b",
+        "--build",
+        required=True,
+        type=valid_path,
+        help="The build folder",
     )
 
     args = parser.parse_args()
@@ -29,12 +38,6 @@ def sphinx_build_language() -> None:
         parser.error(
             f"Language '{args.language}' must be a 2 character string."
         )
-
-    if not os.path.isdir(args.source):
-        parser.error(f"Source folder '{args.source}' does not exist.")
-
-    if not os.path.exists(os.path.dirname(os.path.abspath(args.build))):
-        parser.error(f"Build folder path '{args.build}' is not valid.")
 
     target_build_folder = os.path.join(args.build, args.language)
     command = [

@@ -90,6 +90,8 @@ class TestSphinx(unittest.TestCase):
                 "build",
             ],
         ):
+            mock_isdir.return_value = True
+            mock_exists.return_value = True
             with self.assertRaises(SystemExit):
                 sphinx_build_language()
             mock_error.assert_called_once()
@@ -120,11 +122,12 @@ class TestSphinx(unittest.TestCase):
             ],
         ):
             mock_isdir.return_value = False
+            mock_exists.return_value = True
             with self.assertRaises(SystemExit):
                 sphinx_build_language()
             mock_error.assert_called_once()
             self.assertIn(
-                "Source folder 'nonexistent' does not exist",
+                "The directory 'nonexistent' does not exist",
                 mock_error.call_args[0][0],
             )
             mock_call.assert_not_called()
@@ -159,7 +162,7 @@ class TestSphinx(unittest.TestCase):
                 sphinx_build_language()
             mock_error.assert_called_once()
             self.assertIn(
-                "Build folder path '/invalid/path/build' is not valid",
+                "The parent directory of '/invalid/path/build' does not exist",
                 mock_error.call_args[0][0],
             )
             mock_call.assert_not_called()
