@@ -282,3 +282,11 @@
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
   stages: [commit]
+- id: poetry-sphinx-build-language
+  name: poetry-sphinx-build-language
+  description: "Build sphinx documentation for a specific language using poetry."
+  entry: sphinx_build_language
+  language: python
+  pass_filenames: false
+  require_serial: true
+  stages: [manual]
