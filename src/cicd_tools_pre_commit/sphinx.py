@@ -53,7 +53,3 @@ def sphinx_build_language() -> None:
     ]
 
     call(command)
-
-
-if __name__ == "__main__":
-    sphinx_build_language()
