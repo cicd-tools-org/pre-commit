@@ -5,8 +5,8 @@ from __future__ import annotations
 import argparse
 import os
 
+from .cli.types import existing_directory, language_code, valid_path
 from .system import call
-from .system.argparse_types import existing_directory, language_code, valid_path
 
 
 def sphinx_build_language() -> None:
