@@ -1,5 +1,3 @@
-"""Tests for the sphinx module."""
-
 from __future__ import annotations
 
 import unittest
@@ -9,7 +7,6 @@ from cicd_tools_pre_commit.sphinx import sphinx_build_language
 
 
 class TestSphinx(unittest.TestCase):
-    """Test the sphinx_build_language function."""
 
     @patch(
         "sys.argv",
@@ -26,7 +23,6 @@ class TestSphinx(unittest.TestCase):
         mock_existing_directory,
         mock_call,
     ):
-        """Test successful execution of sphinx_build_language."""
         mock_existing_directory.side_effect = lambda x: x
         mock_language_code.side_effect = lambda x: x
         mock_valid_path.side_effect = lambda x: x
@@ -63,7 +59,6 @@ class TestSphinx(unittest.TestCase):
         mock_existing_directory,
         mock_call,
     ):
-        """Test sphinx_build_language with invalid language."""
         mock_language_code.side_effect = SystemExit(2)
 
         with self.assertRaises(SystemExit):
@@ -94,7 +89,6 @@ class TestSphinx(unittest.TestCase):
         mock_existing_directory,
         mock_call,
     ):
-        """Test sphinx_build_language with invalid source."""
         mock_existing_directory.side_effect = SystemExit(2)
 
         with self.assertRaises(SystemExit):
@@ -125,7 +119,6 @@ class TestSphinx(unittest.TestCase):
         mock_existing_directory,
         mock_call,
     ):
-        """Test sphinx_build_language with invalid build path."""
         mock_valid_path.side_effect = SystemExit(2)
 
         with self.assertRaises(SystemExit):
