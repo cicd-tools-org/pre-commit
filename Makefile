@@ -105,5 +105,5 @@ spelling-sync:
 
 test-python:
 	@echo "Testing python scripts ..."
-	@cd src && poetry run python -m unittest discover
+	@cd src && poetry run python -m unittest discover --buffer
 	@echo "Done."
