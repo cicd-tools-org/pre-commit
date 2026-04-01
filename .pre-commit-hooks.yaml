@@ -180,6 +180,15 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: poetry-docs-build
+  # Add sphinx to your poetry environment to use this hook.
+  name: poetry-docs-build
+  description: "Build documentation for a specific language using sphinx from the local poetry environment."
+  entry: sphinx_build_language
+  language: python
+  pass_filenames: false
+  require_serial: true
+  stages: [manual]
 - id: poetry-lint-ansible
   # Add ansible-lint to your poetry environment to use this hook.
   name: poetry-lint-ansible
