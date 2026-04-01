@@ -1,136 +1,125 @@
 ---
 - id: cicd-tools-box
   name: cicd-tools-box
-  description: Install a CICD-Tools toolbox from the gpg key verified manifest.
+  description: "Install a CICD-Tools toolbox from the gpg key verified manifest."
   entry: ./src/pre-commit/cicd-tools-box.sh -c curlimages/curl:8.90.@sha256:4c1cc1c836054961219e03d71e3f48a993aa40b92c3482eed316e50ede4889d9 -j ghcr.io/cicd-tools-org/cicd-tools:main -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
   args:
-    - -b
-    - 0.1.0
-    - -m
-    - https://raw.githubusercontent.com/cicd-tools-org/manifest/main/manifest.json.asc
+    - "-b"
+    - "0.1.0"
+    - "-m"
+    - "https://raw.githubusercontent.com/cicd-tools-org/manifest/main/manifest.json.asc"
   always_run: true
   language: script
   pass_filenames: false
   require_serial: true
-  stages:
-    - manual
+  stages: [manual]
 - id: cicd-tools-key
   name: cicd-tools-key
-  description: Import the CICD-Tools gpg key for toolbox manifest verification.
+  description: "Import the CICD-Tools gpg key for toolbox manifest verification."
   entry: ./src/pre-commit/cicd-tools-key.sh -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
   args:
-    - -n
-    - F07A79647E91E561A786B6D0D9020F7FEE20DBF2
-    - -p
-    - hkps://keys.openpgp.org
-    - -s
-    - keyserver.ubuntu.com
+    - "-n"
+    - "F07A79647E91E561A786B6D0D9020F7FEE20DBF2"
+    - "-p"
+    - "hkps://keys.openpgp.org"
+    - "-s"
+    - "keyserver.ubuntu.com"
   always_run: true
   language: script
   pass_filenames: false
   require_serial: true
-  stages:
-    - manual
+  stages: [manual]
 - id: cicd-tools-schema-cookiecutter
   name: cicd-tools-schema-cookiecutter
-  description: Verify a JSON file against the CICD-Tools cookiecutter schema.
+  description: "Verify a JSON file against the CICD-Tools cookiecutter schema."
   entry: with-cicd-resources check-jsonschema
   args:
-    - --schemafile
-    - '{CICD_RESOURCES}/schemas/cookiecutter.json'
+    - "--schemafile"
+    - "{CICD_RESOURCES}/schemas/cookiecutter.json"
   language: python
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: cicd-tools-schema-manifest
   name: cicd-tools-schema-manifest
-  description: Verify a JSON file against the CICD-Tools manifest schema.
+  description: "Verify a JSON file against the CICD-Tools manifest schema."
   entry: with-cicd-resources check-jsonschema
   args:
-    - --schemafile
-    - '{CICD_RESOURCES}/schemas/manifest.json'
+    - "--schemafile"
+    - "{CICD_RESOURCES}/schemas/manifest.json"
   language: python
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: commitizen-pre-bump
   name: commitizen-pre-bump
-  description: TOML quote formatting for commitizen.
+  description: "TOML quote formatting for commitizen."
   entry: ./src/pre-commit/commitizen-pre-bump.sh
   always_run: true
   language: script
   pass_filenames: false
   require_serial: true
-  stages:
-    - manual
+  stages: [manual]
 - id: format-shell
   name: format-shell
-  description: Format the project's shell scripts.
+  description: "Format the project's shell scripts."
   entry: --entrypoint=shfmt --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:main
   args:
-    - -w
-    - --indent=2
-    - -ci
-    - -sr
-  exclude: ^\.cicd-tools/boxes/.+$
-  files: ^.+\.(bash|sh)$
+    - "-w"
+    - "--indent=2"
+    - "-ci"
+    - "-sr"
+  exclude: "^\\.cicd-tools/boxes/.+$"
+  files: "^.+\\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: format-toml
   name: format-toml
-  description: Format the project's TOML files.
+  description: "Format the project's TOML files."
   entry: --entrypoint=tomll --env=FORCE_COLOR=1 ghcr.io/cicd-tools-org/cicd-tools:main
-  files: ^.+\.toml$
+  files: "^.+\\.toml$"
   language: docker_image
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: gettext-translations-add
-  name: gettext-translations-add
-  description: Add new languages to the project folder structure for gettext.
+  name: "gettext-translations-add"
+  description: "Add new languages to the project folder structure for gettext."
   entry: ./src/pre-commit/gettext-translations.sh add -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   always_run: true
   language: script
   pass_filenames: false
   require_serial: true
-  stages:
-    - manual
+  stages: [manual]
 - id: gettext-translations-compile
-  name: gettext-translations-compile
-  description: Compile gettext '.po' files into '.mo' files for distribution.
+  name: "gettext-translations-compile"
+  description: "Compile gettext '.po' files into '.mo' files for distribution."
   entry: ./src/pre-commit/gettext-translations.sh compile -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   always_run: true
   language: script
   pass_filenames: false
   require_serial: true
-  stages:
-    - manual
+  stages: [manual]
 - id: gettext-translations-missing
-  name: gettext-translations-missing
-  description: Check all gettext '.po' files for untranslated strings.
+  name: "gettext-translations-missing"
+  description: "Check all gettext '.po' files for untranslated strings."
   entry: ./src/pre-commit/gettext-translations.sh missing -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   always_run: true
-  files: ^.+\.py$
+  files: "^.+\\.py$"
   language: script
   pass_filenames: false
   require_serial: true
-  stages:
-    - commit
+  stages: [commit]
 - id: gettext-translations-update
-  name: gettext-translations-update
-  description: Extract translatable strings from the code base with gettext and regenerate '.pot' and '.po' files.
+  name: "gettext-translations-update"
+  description: "Extract translatable strings from the code base with gettext and regenerate '.pot' and '.po' files."
   entry: ./src/pre-commit/gettext-translations.sh update -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
   always_run: true
-  files: ^.+\.py$
+  files: "^.+\\.py$"
   language: script
   pass_filenames: false
   require_serial: true
-  stages:
-    - commit
+  stages: [commit]
 - id: git-conflict-markers
-  name: git-conflict-markers
+  name: "git-conflict-markers"
   entry: git
   args:
     - --no-pager
@@ -138,181 +127,166 @@
     - --cached
     - --check
   language: system
-  stages:
-    - commit
+  stages: [commit]
 - id: lint-dockerfile
   name: lint-dockerfile
-  description: Lint the project's Dockerfiles.
+  description: "Lint the project's Dockerfiles."
   entry: --entrypoint=hadolint ghcr.io/cicd-tools-org/cicd-tools:main
   language: docker_image
-  stages:
-    - commit
-  types:
-    - dockerfile
+  stages: [commit]
+  types: ["dockerfile"]
 - id: lint-github-workflow
   name: lint-github-workflow
-  description: Lint the project's GitHub workflow files.
+  description: "Lint the project's GitHub workflow files."
   entry: --entrypoint=actionlint ghcr.io/cicd-tools-org/cicd-tools:main
   args:
-    - -color
-    - -config-file
-    - .cicd-tools/configuration/actionlint.yaml
-  files: ^.github/workflows/.+\.(yaml|yml)$
+    - "-color"
+    - "-config-file"
+    - ".cicd-tools/configuration/actionlint.yaml"
+  files: "^.github/workflows/.+\\.(yaml|yml)$"
   language: docker_image
   pass_filenames: false
-  stages:
-    - commit
+  stages: [commit]
 - id: lint-github-workflow-header
   name: lint-github-workflow-header
-  description: Lint the headers of the project's GitHub workflow files.
+  description: "Lint the headers of the project's GitHub workflow files."
   entry: ./src/pre-commit/lint-github-workflow-header.sh
-  files: ^.github/workflows/.+\.(yaml|yml)$
+  files: "^.github/workflows/.+\\.(yaml|yml)$"
   language: script
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: lint-markdown
   name: lint-markdown
-  description: Lint the Markdown files.
-  files: ^.+\.md$
+  description: "Lint the Markdown files."
+  files: "^.+\\.md$"
   entry: ghcr.io/igorshubovych/markdownlint-cli:v0.35.0@sha256:22cf4699a448a7bbc311a940e0600019423d7671cbedae9c35cd32b51f560350
   args:
-    - -c
-    - .markdownlint.yml
+    - "-c"
+    - ".markdownlint.yml"
   language: docker_image
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: lint-shell
   name: lint-shell
-  description: Lint the project's shell scripts.
+  description: "Lint the project's shell scripts."
   entry: --entrypoint=shellcheck ghcr.io/cicd-tools-org/cicd-tools:main
   args:
-    - --color=always
-    - --source-path=SCRIPTDIR
-    - --exclude=SC2317
-    - -x
-  exclude: ^\.cicd-tools/boxes/.+$
-  files: ^.+\.(bash|sh)$
+    - "--color=always"
+    - "--source-path=SCRIPTDIR"
+    - "--exclude=SC2317"
+    - "-x"
+  exclude: "^\\.cicd-tools/boxes/.+$"
+  files: "^.+\\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: poetry-lint-ansible
+  # Add ansible-lint to your poetry environment to use this hook.
   name: poetry-lint-ansible
-  description: Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment.
+  description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
   entry: ./src/pre-commit/lint-ansible.sh
-  files: ^.+\.(yaml|yml)$|^.ansible-lint$
+  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
   language: script
   pass_filenames: false
-  stages:
-    - commit
+  stages: [commit]
 - id: poetry-lint-python
-  name: poetry-lint-python
-  description: Lint the project's Python files using pylint from the local poetry environment.
+  # Add pylint to your poetry environment to use this hook.
+  name: "poetry-lint-python"
+  description: "Lint the project's Python files using pylint from the local poetry environment."
   entry: poetry run pylint
-  files: ^.+\.py$
+  files: "^.+\\.py$"
   language: system
-  stages:
-    - commit
+  stages: [commit]
 - id: poetry-sphinx-build-language
   name: poetry-sphinx-build-language
-  description: Build sphinx documentation for a specific language using poetry.
+  description: "Build sphinx documentation for a specific language using poetry."
   entry: sphinx_build_language
   language: python
   pass_filenames: false
   require_serial: true
-  stages:
-    - manual
+  stages: [manual]
 - id: poetry-types-python
-  name: types-python
-  description: Type check the project's Python files using mypy from the local poetry environment.
+  # Add mypy to your poetry environment to use this hook.
+  name: "types-python"
+  description: "Type check the project's Python files using mypy from the local poetry environment."
   entry: poetry run mypy
   args:
-    - --strict
-    - --show-error-codes
-    - --implicit-reexport
-    - --explicit-package-bases
-  files: ^.+\.pyi?$
+    - "--strict"
+    - "--show-error-codes"
+    - "--implicit-reexport"
+    - "--explicit-package-bases"
+  files: "^.+\\.pyi?$"
   language: system
   require_serial: true
-  stages:
-    - commit
+  stages: [commit]
 - id: pre-commit-sort-config
-  name: pre-commit-sort-config
-  description: Sort the hooks inside your pre-commit configuration files.
+  name: "pre-commit-sort-config"
+  description: "Sort the hooks inside your pre-commit configuration files."
   entry: ./src/pre-commit/pre-commit-sort-config.sh
   args:
-    - ghcr.io/cicd-tools-org/cicd-tools:main
-  files: ^(.+/)*\.pre-commit-config\.yaml$
+    - "ghcr.io/cicd-tools-org/cicd-tools:main"
+  files: "^(.+/)*\\.pre-commit-config\\.yaml$"
   language: script
   pass_filenames: true
   require_serial: true
-  stages:
-    - commit
+  stages: [commit]
 - id: pre-commit-sort-hooks
-  name: pre-commit-sort-hooks
-  description: Sort the hooks inside your pre-commit hook definition files.
+  name: "pre-commit-sort-hooks"
+  description: "Sort the hooks inside your pre-commit hook definition files."
   entry: ./src/pre-commit/pre-commit-sort-hooks.sh
   args:
-    - ghcr.io/cicd-tools-org/cicd-tools:main
-  files: ^(.+/)*\.pre-commit-hooks\.yaml$
+    - "ghcr.io/cicd-tools-org/cicd-tools:main"
+  files: "^(.+/)*\\.pre-commit-hooks\\.yaml$"
   language: script
   pass_filenames: true
   require_serial: true
-  stages:
-    - commit
+  stages: [commit]
 - id: security-credentials
   name: security-credentials
-  description: Scan codebase for checked in credentials.
+  description: "Scan codebase for checked in credentials."
   entry: trufflesecurity/trufflehog:3.63.2@sha256:16c1cf07b7142037a2859d4ad0f51c40603e7e58703ddb8bd80cf40e6af51f44
   args:
-    - git
-    - file://.
-    - --fail
-    - --no-update
-    - --debug
-    - --max-depth=500
+    - "git"
+    - "file://."
+    - "--fail"
+    - "--no-update"
+    - "--debug"
+    - "--max-depth=500"
   language: docker_image
   pass_filenames: false
-  stages:
-    - commit
+  stages: [commit]
 - id: spelling-commit-message
   name: spelling-commit-message
-  description: Check the spelling on the commit message.
+  description: "Check the spelling on the commit message."
   entry: ./src/pre-commit/spelling-commit-message.sh
   args:
-    - ghcr.io/cicd-tools-org/cicd-tools:main
+    - "ghcr.io/cicd-tools-org/cicd-tools:main"
   always_run: true
   language: script
   pass_filenames: true
   require_serial: true
-  stages:
-    - commit-msg
+  stages: [commit-msg]
 - id: spelling-markdown
   name: spelling-markdown
-  description: Spellcheck the Markdown files.
+  description: "Spellcheck the Markdown files."
   entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
-  files: ^.+\.md$|^.vale/Vocab/\.+$
+  files: "^.+\\.md$|^.vale/Vocab/\\.+$"
   language: docker_image
   pass_filenames: true
-  stages:
-    - commit
+  stages: [commit]
 - id: spelling-vale-sync
   name: spelling-vale-sync
-  description: Download any required vale packages.
+  description: "Download any required vale packages."
   entry: -v /tmp:/tmp --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
   args:
-    - sync
+    - "sync"
   always_run: true
   language: docker_image
   pass_filenames: false
-  stages:
-    - manual
+  stages: [manual]
 - id: spelling-vale-vocab
-  name: spelling-vale-vocab
+  name: "spelling-vale-vocab"
   entry: sh -c 'for FILE in "$@"; do sort -u -o ${FILE} ${FILE}; done' --
-  files: ^.vale/Vocab/.+/(accept|reject)\.txt$
+  files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
-  stages:
-    - commit
+  stages: [commit]
