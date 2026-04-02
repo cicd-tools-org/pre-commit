@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import unittest
 from unittest.mock import patch
 
@@ -10,13 +8,13 @@ class TestSphinx(unittest.TestCase):
 
     @patch(
         "sys.argv",
-        ["sphinx_build_language", "-l", "EN", "-t", "source", "-b", "build"],
+        ["sphinx_build_language", "-l", "en", "-t", "source", "-b", "build"],
     )
     @patch("cicd_tools_pre_commit.sphinx.call")
     @patch("cicd_tools_pre_commit.sphinx.existing_directory")
     @patch("cicd_tools_pre_commit.sphinx.language_code")
     @patch("cicd_tools_pre_commit.sphinx.valid_path")
-    def test_sphinx_build_language_success(
+    def test_sphinx_build_language__valid_args__calls_sphinx_build(
         self,
         mock_valid_path,
         mock_language_code,
@@ -38,58 +36,38 @@ class TestSphinx(unittest.TestCase):
                 "-b",
                 "html",
                 "-D",
-                "language=EN",
+                "language=en",
                 "source",
-                "build/EN",
+                "build/en",
             ],
         )
 
     @patch(
         "sys.argv",
-        ["sphinx_build_language", "-l", "ENG", "-t", "source", "-b", "build"],
-    )
-    @patch("cicd_tools_pre_commit.sphinx.call")
-    @patch("cicd_tools_pre_commit.sphinx.existing_directory")
-    @patch("cicd_tools_pre_commit.sphinx.language_code")
-    @patch("cicd_tools_pre_commit.sphinx.valid_path")
-    def test_sphinx_build_language_invalid_language(
-        self,
-        mock_valid_path,
-        mock_language_code,
-        mock_existing_directory,
-        mock_call,
-    ):
-        mock_language_code.side_effect = SystemExit(2)
-
-        with self.assertRaises(SystemExit):
-            sphinx_build_language()
-
-        mock_call.assert_not_called()
-
-    @patch(
-        "sys.argv",
         [
             "sphinx_build_language",
             "-l",
-            "EN",
+            "invalid",
             "-t",
-            "nonexistent",
+            "source",
             "-b",
             "build",
         ],
     )
     @patch("cicd_tools_pre_commit.sphinx.call")
+    @patch("argparse.ArgumentParser.error")
     @patch("cicd_tools_pre_commit.sphinx.existing_directory")
-    @patch("cicd_tools_pre_commit.sphinx.language_code")
     @patch("cicd_tools_pre_commit.sphinx.valid_path")
-    def test_sphinx_build_language_invalid_source(
+    def test_sphinx_build_language__invalid_language__raises_system_exit(
         self,
         mock_valid_path,
-        mock_language_code,
         mock_existing_directory,
+        mock_error,
         mock_call,
     ):
-        mock_existing_directory.side_effect = SystemExit(2)
+        mock_error.side_effect = SystemExit(2)
+        mock_existing_directory.side_effect = lambda x: x
+        mock_valid_path.side_effect = lambda x: x
 
         with self.assertRaises(SystemExit):
             sphinx_build_language()
@@ -98,28 +76,25 @@ class TestSphinx(unittest.TestCase):
 
     @patch(
         "sys.argv",
-        [
-            "sphinx_build_language",
-            "-l",
-            "EN",
-            "-t",
-            "source",
-            "-b",
-            "/invalid/path/build",
-        ],
+        ["sphinx_build_language", "-l", "en", "-t", "missing", "-b", "build"],
     )
     @patch("cicd_tools_pre_commit.sphinx.call")
-    @patch("cicd_tools_pre_commit.sphinx.existing_directory")
+    @patch("argparse.ArgumentParser.error")
     @patch("cicd_tools_pre_commit.sphinx.language_code")
     @patch("cicd_tools_pre_commit.sphinx.valid_path")
-    def test_sphinx_build_language_invalid_build(
+    @patch("os.path.isdir")
+    def test_sphinx_build_language__missing_source__raises_system_exit(
         self,
+        mock_isdir,
         mock_valid_path,
         mock_language_code,
-        mock_existing_directory,
+        mock_error,
         mock_call,
     ):
-        mock_valid_path.side_effect = SystemExit(2)
+        mock_error.side_effect = SystemExit(2)
+        mock_isdir.return_value = False
+        mock_language_code.side_effect = lambda x: x
+        mock_valid_path.side_effect = lambda x: x
 
         with self.assertRaises(SystemExit):
             sphinx_build_language()

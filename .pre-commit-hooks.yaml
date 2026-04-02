@@ -198,6 +198,7 @@
   language: system
   stages: [commit]
 - id: poetry-sphinx-build-language
+  # Add sphinx to your poetry environment to use this hook.
   name: poetry-sphinx-build-language
   description: "Build sphinx documentation for a specific language using poetry."
   entry: sphinx_build_language

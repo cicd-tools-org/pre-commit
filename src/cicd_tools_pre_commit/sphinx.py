@@ -1,7 +1,5 @@
 """Sphinx related pre-commit scripts."""
 
-from __future__ import annotations
-
 import argparse
 import os
 
@@ -12,14 +10,14 @@ from .system import call
 def sphinx_build_language() -> None:
     """Build sphinx documentation for a specific language."""
     parser = argparse.ArgumentParser(
-        description="Build sphinx documentation for a specific language."
+        description="Build sphinx documentation for a specific language.",
     )
     parser.add_argument(
         "-l",
         "--language",
         required=True,
         type=language_code,
-        help="The target language (e.g. EN)",
+        help="The target language (e.g. en)",
     )
     parser.add_argument(
         "-t",
