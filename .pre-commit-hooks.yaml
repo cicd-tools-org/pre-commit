@@ -200,7 +200,7 @@
 - id: poetry-sphinx-build-language
   # Add sphinx to your poetry environment to use this hook.
   name: poetry-sphinx-build-language
-  description: "Build sphinx documentation for a specific language using poetry."
+  description: "Build documentation for a specific language using sphinx from the local poetry environment."
   entry: sphinx_build_language
   language: python
   pass_filenames: false
