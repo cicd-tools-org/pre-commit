@@ -4,7 +4,7 @@ import argparse
 import os
 import re
 
-LANGUAGE_CODE_REGEX = re.compile(r"^([a-z]{2}|[a-z]{2}_[A-Z]{2})$")
+LANGUAGE_CODE_REGEX = re.compile(r"^[a-z]{2}(_[A-Z]{2})?$")
 
 
 def existing_directory(path: str) -> str:

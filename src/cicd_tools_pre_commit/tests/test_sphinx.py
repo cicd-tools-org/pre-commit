@@ -80,19 +80,19 @@ class TestSphinx(unittest.TestCase):
     )
     @patch("cicd_tools_pre_commit.sphinx.call")
     @patch("argparse.ArgumentParser.error")
+    @patch("cicd_tools_pre_commit.sphinx.existing_directory")
     @patch("cicd_tools_pre_commit.sphinx.language_code")
     @patch("cicd_tools_pre_commit.sphinx.valid_path")
-    @patch("os.path.isdir")
     def test_sphinx_build_language__missing_source__raises_system_exit(
         self,
-        mock_isdir,
         mock_valid_path,
         mock_language_code,
+        mock_existing_directory,
         mock_error,
         mock_call,
     ):
         mock_error.side_effect = SystemExit(2)
-        mock_isdir.return_value = False
+        mock_existing_directory.side_effect = SystemExit(2)
         mock_language_code.side_effect = lambda x: x
         mock_valid_path.side_effect = lambda x: x
 

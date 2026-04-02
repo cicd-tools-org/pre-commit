@@ -1,3 +1,4 @@
+import argparse
 import unittest
 from unittest.mock import patch
 
@@ -33,5 +34,5 @@ class TestValidPath(unittest.TestCase):
         mock_abspath.return_value = "/invalid/parent/file"
         mock_dirname.return_value = "/invalid/parent"
         mock_exists.return_value = False
-        with self.assertRaises(Exception):
+        with self.assertRaises(argparse.ArgumentTypeError):
             valid_path("file")

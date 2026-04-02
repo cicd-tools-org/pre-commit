@@ -1,3 +1,4 @@
+import argparse
 import unittest
 from unittest.mock import patch
 
@@ -21,5 +22,5 @@ class TestExistingDirectory(unittest.TestCase):
         mock_isdir,
     ):
         mock_isdir.return_value = False
-        with self.assertRaises(Exception):
+        with self.assertRaises(argparse.ArgumentTypeError):
             existing_directory("/invalid/dir")
