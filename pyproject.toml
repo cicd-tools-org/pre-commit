@@ -38,6 +38,7 @@ include = 'cicd_tools_pre_commit'
 
 [tool.poetry.scripts]
 sphinx_build_language = 'cicd_tools_pre_commit:sphinx_build_language'
+sphinx_translate = 'cicd_tools_pre_commit:sphinx_translate'
 with-cicd-resources = 'cicd_tools_pre_commit:with_cicd_resources'
 
 [tool.ruff]
