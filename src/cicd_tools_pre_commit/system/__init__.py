@@ -5,22 +5,30 @@ from __future__ import annotations
 import subprocess
 import sys
 
-from .fs import rmtree as rmtree
-
 CALL_ERROR = "ERROR: non-zero exit status ({})"
 
 
-def call(command: list[str]) -> None:
+def call(
+    command: list[str],
+    cwd: str | None = None,
+    mute: bool = False,
+) -> str:
     """Execute the specified system call."""
     try:
         process = subprocess.run(
             command,
             check=True,
+            cwd=cwd,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
-        print(f"{process.stdout.decode('utf-8')}", end="")
+        output = process.stdout.decode("utf-8")
+        if not mute:
+            print(f"{output}", end="")
     except subprocess.CalledProcessError as exc:
-        print(f"{exc.stdout.decode('utf-8')}", end="")
+        output = exc.stdout.decode("utf-8")
+        print(f"{output}", end="")
         print(CALL_ERROR.format(exc.returncode))
         sys.exit(exc.returncode)
+
+    return output
