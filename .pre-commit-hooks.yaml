@@ -189,6 +189,15 @@
   pass_filenames: false
   require_serial: true
   stages: [manual]
+- id: poetry-docs-translate
+  # Add sphinx and sphinx-intl to your poetry environment to use this hook.  The 'gettext' binary is also required.
+  name: poetry-docs-translate
+  description: "Extract translations for the project's sphinx documentation."
+  entry: sphinx_translate
+  language: python
+  pass_filenames: false
+  require_serial: true
+  stages: [commit]
 - id: poetry-lint-ansible
   # Add ansible-lint to your poetry environment to use this hook.
   name: poetry-lint-ansible

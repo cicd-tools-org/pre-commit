@@ -52,3 +52,53 @@ def sphinx_build_language() -> None:
     ]
 
     call(command)
+
+
+def sphinx_translate() -> None:
+    """Extract translations for sphinx documentation."""
+    parser = argparse.ArgumentParser(
+        description="Extract translations for sphinx documentation.",
+        prog="sphinx_translate",
+    )
+    parser.add_argument(
+        "-b",
+        "--build",
+        required=True,
+        type=path_valid,
+        help="The build folder (relative to the source folder)",
+    )
+    parser.add_argument(
+        "-s",
+        "--source",
+        required=True,
+        type=path_existing,
+        help="The documentation source folder",
+    )
+
+    args = parser.parse_args()
+
+    gettext_folder = os.path.join(args.build, "gettext")
+
+    call(
+        [
+            "poetry",
+            "run",
+            "sphinx-build",
+            "-b",
+            "gettext",
+            ".",
+            gettext_folder,
+        ],
+        cwd=args.source,
+    )
+    call(
+        [
+            "poetry",
+            "run",
+            "sphinx-intl",
+            "update",
+            "-p",
+            gettext_folder,
+        ],
+        cwd=args.source,
+    )
