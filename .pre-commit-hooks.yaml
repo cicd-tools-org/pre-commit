@@ -180,15 +180,6 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
-- id: poetry-lint-ansible
-  # Add ansible-lint to your poetry environment to use this hook.
-  name: poetry-lint-ansible
-  description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
-  entry: ./src/pre-commit/lint-ansible.sh
-  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
-  language: script
-  pass_filenames: false
-  stages: [commit]
 - id: poetry-docs-build
   # Add sphinx to your poetry environment to use this hook.
   name: poetry-docs-build
@@ -207,6 +198,15 @@
   pass_filenames: false
   require_serial: true
   stages: [manual]
+- id: poetry-lint-ansible
+  # Add ansible-lint to your poetry environment to use this hook.
+  name: poetry-lint-ansible
+  description: "Check the collection or role for Ansible best practices using ansible-lint from the local poetry environment."
+  entry: ./src/pre-commit/lint-ansible.sh
+  files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
+  language: script
+  pass_filenames: false
+  stages: [commit]
 - id: poetry-lint-python
   # Add pylint to your poetry environment to use this hook.
   name: "poetry-lint-python"
