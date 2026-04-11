@@ -2,6 +2,7 @@
 
 import argparse
 import re
+import sys
 from typing import List
 
 from .cli.types import file_existing
@@ -44,7 +45,8 @@ def pysed_hook() -> None:
     if args.ignore_case:
         flags = re.IGNORECASE
 
-    _process_files(args.files, args.pattern, args.replacement, flags)
+    if _process_files(args.files, args.pattern, args.replacement, flags):
+        sys.exit(1)
 
 
 def _process_files(
@@ -52,9 +54,10 @@ def _process_files(
     pattern: str,
     replacement: str,
     flags: int,
-) -> None:
+) -> bool:
     """Process the list of files and perform the replacement."""
     regex = re.compile(pattern, flags=flags)
+    modified = False
 
     for filepath in files:
         with open(filepath, "r", encoding="utf-8") as file:
@@ -65,3 +68,6 @@ def _process_files(
         if new_content != content:
             with open(filepath, "w", encoding="utf-8") as file:
                 file.write(new_content)
+            modified = True
+
+    return modified

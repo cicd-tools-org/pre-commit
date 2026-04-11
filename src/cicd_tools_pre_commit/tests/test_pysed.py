@@ -26,8 +26,10 @@ class TestPysed(unittest.TestCase):
     ):
         mock_file_existing.side_effect = lambda x: x
 
-        pysed()
+        with self.assertRaises(SystemExit) as cm:
+            pysed()
 
+        self.assertEqual(cm.exception.code, 1)
         mock_file.assert_any_call("file1.txt", "r", encoding="utf-8")
         mock_file.assert_any_call("file1.txt", "w", encoding="utf-8")
         handle = mock_file()
@@ -54,8 +56,10 @@ class TestPysed(unittest.TestCase):
     ):
         mock_file_existing.side_effect = lambda x: x
 
-        pysed()
+        with self.assertRaises(SystemExit) as cm:
+            pysed()
 
+        self.assertEqual(cm.exception.code, 1)
         handle = mock_file()
         handle.write.assert_called_once_with("bar content")
 
@@ -107,8 +111,10 @@ class TestPysed(unittest.TestCase):
     ):
         mock_file_existing.side_effect = lambda x: x
 
-        pysed()
+        with self.assertRaises(SystemExit) as cm:
+            pysed()
 
+        self.assertEqual(cm.exception.code, 1)
         self.assertEqual(mock_file.call_count, 4)
         # Actually, let's just check if it was called for both files
         mock_file.assert_any_call("file1.txt", "r", encoding="utf-8")
