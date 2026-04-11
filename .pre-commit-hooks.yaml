@@ -2,7 +2,7 @@
 - id: cicd-tools-box
   name: cicd-tools-box
   description: "Install a CICD-Tools toolbox from the gpg key verified manifest."
-  entry: ./src/pre-commit/cicd-tools-box.sh -c curlimages/curl:8.9.0 -j ghcr.io/cicd-tools-org/cicd-tools:main -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
+  entry: ./src/pre-commit/cicd-tools-box.sh -c curlimages/curl:8.19.0 -j ghcr.io/cicd-tools-org/cicd-tools:main -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
   args:
     - "-b"
     - "0.1.0"
@@ -159,7 +159,7 @@
   name: lint-markdown
   description: "Lint the Markdown files."
   files: "^.+\\.md$"
-  entry: ghcr.io/igorshubovych/markdownlint-cli:v0.35.0
+  entry: ghcr.io/igorshubovych/markdownlint-cli:v0.48.0
   args:
     - "-c"
     - ".markdownlint.yml"
@@ -236,7 +236,7 @@
 - id: security-credentials
   name: security-credentials
   description: "Scan codebase for checked in credentials."
-  entry: trufflesecurity/trufflehog:3.63.2
+  entry: trufflesecurity/trufflehog:3.94.3
   args:
     - "git"
     - "file://."
@@ -244,6 +244,7 @@
     - "--no-update"
     - "--debug"
     - "--max-depth=500"
+    - "--trust-local-git-config"
   language: docker_image
   pass_filenames: false
   stages: [commit]
