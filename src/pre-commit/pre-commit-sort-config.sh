@@ -31,7 +31,7 @@ main() {
     container "${PRECOMMIT_YQ_DOCKER_IMAGE}" \
       yq \
       --inplace \
-      '.repos |= sort_by(.repo) | .repos.[].hooks |= sort_by(.id)' \
+      '.repos |= sort_by(.repo) | .repos.[].hooks |= sort_by(.alias // .id)' \
       "${PRECOMMIT_INPUT_FILE}"
   done
 
