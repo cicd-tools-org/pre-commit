@@ -48,6 +48,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | poetry-lint-ansible            | Runs [ansible-lint](https://github.com/ansible/ansible-lint) to check for Ansible best practices and behaviours.                                                                                                                            |
 | poetry-lint-python             | Runs [pylint](https://github.com/pylint-dev/pylint) on all Python files to perform static code analysis.                                                                                                                                    |
 | poetry-types-python            | Runs [mypy](https://github.com/python/mypy) on all Python files to check typing.                                                                                                                                                            |
+| pysed                          | Runs a custom [script](src/cicd_tools_pre_commit/pysed.py) to perform string search and replace tasks.                                                                                                                                      |
 
 ### Implementation Details
 
@@ -78,6 +79,7 @@ These hooks all rely on 3rd party software to perform different types of static 
 | poetry-docs-translate          | poetry environment | The project's [poetry](https://python-poetry.org/) environment is used to invoke this tool.  The [gettext](https://www.gnu.org/software/gettext/) binary is also required in path.                                           |
 | poetry-lint-python             | poetry environment | The project's [poetry](https://python-poetry.org/) environment is used to invoke this tool.                                                                                                                                  |
 | poetry-types-python            | poetry environment | The project's [poetry](https://python-poetry.org/) environment is used to invoke this tool.                                                                                                                                  |
+| pysed                          | CICD-Tools         | A custom [script](src/cicd_tools_pre_commit/pysed.py) is invoked.                                                                                                                                                            |
 
 ## License
 
