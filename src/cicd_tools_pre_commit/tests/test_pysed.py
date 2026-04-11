@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import mock_open, patch
 
-from cicd_tools_pre_commit.pysed import main as pysed
+from cicd_tools_pre_commit.pysed import pysed_hook as pysed
 
 
 class TestPysed(unittest.TestCase):
