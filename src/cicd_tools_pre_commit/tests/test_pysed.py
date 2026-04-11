@@ -1,7 +1,7 @@
 import unittest
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import mock_open, patch
 
-from cicd_tools_pre_commit.pysed import pysed
+from cicd_tools_pre_commit.pysed import main as pysed
 
 
 class TestPysed(unittest.TestCase):
