@@ -251,6 +251,13 @@
   pass_filenames: true
   require_serial: true
   stages: [commit]
+- id: pysed
+  name: "pysed"
+  description: "Sed-like find and replace using Python."
+  entry: pysed
+  language: python
+  pass_filenames: true
+  stages: [commit]
 - id: security-credentials
   name: security-credentials
   description: "Scan codebase for checked in credentials."
