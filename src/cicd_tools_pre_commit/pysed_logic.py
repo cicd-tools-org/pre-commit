@@ -8,7 +8,7 @@ from typing import List
 from .cli.types import file_existing
 
 
-def pysed_hook() -> None:
+def pysed() -> None:
     """Run a sed-like find and replace on files."""
     parser = argparse.ArgumentParser(
         description="Sed-like find and replace using Python.",
