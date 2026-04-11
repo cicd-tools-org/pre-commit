@@ -2,7 +2,7 @@
 - id: cicd-tools-box
   name: cicd-tools-box
   description: "Install a CICD-Tools toolbox from the gpg key verified manifest."
-  entry: ./src/pre-commit/cicd-tools-box.sh -c curlimages/curl:8.90.@sha256:4c1cc1c836054961219e03d71e3f48a993aa40b92c3482eed316e50ede4889d9 -j ghcr.io/cicd-tools-org/cicd-tools:main -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
+  entry: ./src/pre-commit/cicd-tools-box.sh -c curlimages/curl:8.9.0 -j ghcr.io/cicd-tools-org/cicd-tools:main -g ghcr.io/cicd-tools-org/cicd-tools-gpg:main
   args:
     - "-b"
     - "0.1.0"
@@ -159,7 +159,7 @@
   name: lint-markdown
   description: "Lint the Markdown files."
   files: "^.+\\.md$"
-  entry: ghcr.io/igorshubovych/markdownlint-cli:v0.35.0@sha256:22cf4699a448a7bbc311a940e0600019423d7671cbedae9c35cd32b51f560350
+  entry: ghcr.io/igorshubovych/markdownlint-cli:v0.35.0
   args:
     - "-c"
     - ".markdownlint.yml"
@@ -254,7 +254,7 @@
 - id: security-credentials
   name: security-credentials
   description: "Scan codebase for checked in credentials."
-  entry: trufflesecurity/trufflehog:3.63.2@sha256:16c1cf07b7142037a2859d4ad0f51c40603e7e58703ddb8bd80cf40e6af51f44
+  entry: trufflesecurity/trufflehog:3.63.2
   args:
     - "git"
     - "file://."
