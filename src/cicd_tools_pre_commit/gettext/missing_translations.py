@@ -8,10 +8,10 @@ import sys
 from cicd_tools_pre_commit.cli.types import file_existing
 
 COMMENT_IDENTIFIER = "#"
+MSGID_HEADER_IDENTIFIER = 'msgid ""'
 MSGID_IDENTIFIER = "msgid "
 MSGSTR_EMPTY_IDENTIFIER = 'msgstr ""'
 STRING_IDENTIFIER = '"'
-MSGID_HEADER_IDENTIFIER = 'msgid ""'
 
 
 def gettext_translations_missing_hook() -> None:
