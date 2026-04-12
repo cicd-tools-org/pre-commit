@@ -1,152 +1,90 @@
-import os
-import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import mock_open, patch
 
 from cicd_tools_pre_commit.gettext.missing_translations import (
-    _process_file,
     gettext_translations_missing_hook,
+    missing_translations,
 )
 
 
 class TestGettextMissingTranslations(unittest.TestCase):
 
-    def test__process_file__empty_msgstr__returns_msgid(self):
-        content = """
-msgid "Hello"
-msgstr ""
-"""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".po", delete=False
-        ) as f:
-            f.write(content)
-            temp_path = f.name
+    @patch("builtins.open", new_callable=mock_open,
+           read_data='msgid "Hello"\nmsgstr ""\n')
+    def test_missing_translations__empty_msgstr__returns_msgid(
+        self, _mock_file,
+    ):
+        result = missing_translations("test.po")
+        self.assertEqual(result, ['msgid "Hello"'])
 
-        try:
-            result = _process_file(temp_path)
-            self.assertEqual(result, ['msgid "Hello"'])
-        finally:
-            os.remove(temp_path)
+    @patch("builtins.open", new_callable=mock_open,
+           read_data='msgid "Hello"\nmsgstr "Bonjour"\n')
+    def test_missing_translations__filled_msgstr__returns_empty_list(
+        self, _mock_file,
+    ):
+        result = missing_translations("test.po")
+        self.assertEqual(result, [])
 
-    def test__process_file__filled_msgstr__returns_empty_list(self):
-        content = """
-msgid "Hello"
-msgstr "Bonjour"
-"""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".po", delete=False
-        ) as f:
-            f.write(content)
-            temp_path = f.name
+    @patch("builtins.open", new_callable=mock_open,
+           read_data='msgid ""\nmsgstr ""\n"Content-Type: ...\\n"\n')
+    def test_missing_translations__header_ignored__returns_empty_list(
+        self, _mock_file,
+    ):
+        result = missing_translations("test.po")
+        self.assertEqual(result, [])
 
-        try:
-            result = _process_file(temp_path)
-            self.assertEqual(result, [])
-        finally:
-            os.remove(temp_path)
+    @patch("builtins.open", new_callable=mock_open,
+           read_data='msgid ""\n"First line "\n"Second line"\nmsgstr ""\n')
+    def test_missing_translations__multi_line_msgid__returns_full_msgid(
+        self, _mock_file,
+    ):
+        result = missing_translations("test.po")
+        self.assertEqual(
+            result, ['msgid "" "First line " "Second line"']
+        )
 
-    def test__process_file__header_ignored__returns_empty_list(self):
-        content = """
-msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\\n"
-"""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".po", delete=False
-        ) as f:
-            f.write(content)
-            temp_path = f.name
+    @patch("builtins.open", new_callable=mock_open,
+           read_data='msgid "Hello"\nmsgstr ""\n"Bonjour"\n')
+    def test_missing_translations__multi_line_msgstr__returns_empty_list(
+        self, _mock_file,
+    ):
+        result = missing_translations("test.po")
+        self.assertEqual(result, [])
 
-        try:
-            result = _process_file(temp_path)
-            self.assertEqual(result, [])
-        finally:
-            os.remove(temp_path)
-
-    def test__process_file__multi_line_msgid__returns_full_msgid(self):
-        content = """
-msgid ""
-"First line "
-"Second line"
-msgstr ""
-"""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".po", delete=False
-        ) as f:
-            f.write(content)
-            temp_path = f.name
-
-        try:
-            result = _process_file(temp_path)
-            self.assertEqual(
-                result, ['msgid "" "First line " "Second line"']
-            )
-        finally:
-            os.remove(temp_path)
-
-    def test__process_file__multi_line_msgstr__returns_empty_list(self):
-        content = """
-msgid "Hello"
-msgstr ""
-"Bonjour"
-"""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".po", delete=False
-        ) as f:
-            f.write(content)
-            temp_path = f.name
-
-        try:
-            result = _process_file(temp_path)
-            self.assertEqual(result, [])
-        finally:
-            os.remove(temp_path)
-
-    def test__process_file__comments_ignored__returns_msgid(self):
-        content = """
-# This is a comment
-msgid "Hello"
-# Another comment
-msgstr ""
-"""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".po", delete=False
-        ) as f:
-            f.write(content)
-            temp_path = f.name
-
-        try:
-            result = _process_file(temp_path)
-            self.assertEqual(result, ['msgid "Hello"'])
-        finally:
-            os.remove(temp_path)
+    @patch("builtins.open", new_callable=mock_open,
+           read_data='# comment\nmsgid "Hello"\n# comment\nmsgstr ""\n')
+    def test_missing_translations__comments_ignored__returns_msgid(
+        self, _mock_file,
+    ):
+        result = missing_translations("test.po")
+        self.assertEqual(result, ['msgid "Hello"'])
 
     @patch("sys.argv", ["gettext_translations_missing", "file1.po"])
     @patch("cicd_tools_pre_commit.gettext.missing_translations.file_existing")
-    @patch("cicd_tools_pre_commit.gettext.missing_translations._process_file")
+    @patch("cicd_tools_pre_commit.gettext.missing_translations.missing_translations")
     @patch("sys.exit")
     def test_gettext_translations_missing_hook__missing_found__calls_exit(
         self,
         mock_exit,
-        mock_process,
+        mock_missing,
         mock_file_existing,
     ):
         mock_file_existing.side_effect = lambda x: x
-        mock_process.return_value = ['msgid "Missing"']
+        mock_missing.return_value = ['msgid "Missing"']
         gettext_translations_missing_hook()
         mock_exit.assert_called_with(1)
 
     @patch("sys.argv", ["gettext_translations_missing", "file1.po"])
     @patch("cicd_tools_pre_commit.gettext.missing_translations.file_existing")
-    @patch("cicd_tools_pre_commit.gettext.missing_translations._process_file")
+    @patch("cicd_tools_pre_commit.gettext.missing_translations.missing_translations")
     @patch("sys.exit")
     def test_gettext_translations_missing_hook__no_missing__does_not_call_exit(
         self,
         mock_exit,
-        mock_process,
+        mock_missing,
         mock_file_existing,
     ):
         mock_file_existing.side_effect = lambda x: x
-        mock_process.return_value = []
+        mock_missing.return_value = []
         gettext_translations_missing_hook()
         mock_exit.assert_not_called()
