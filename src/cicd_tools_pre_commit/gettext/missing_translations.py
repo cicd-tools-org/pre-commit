@@ -7,6 +7,11 @@ import sys
 
 from ..cli.types import file_existing
 
+_COMMENT_ID = "#"
+_MSGID_ID = "msgid "
+_MSGSTR_ID = 'msgstr ""'
+_STRING_ID = '"'
+
 
 def gettext_translations_missing_hook() -> None:
     """Check for missing translations in PO files."""
@@ -25,11 +30,11 @@ def gettext_translations_missing_hook() -> None:
 
     error_found = False
     for filepath in args.files:
-        missing = _process_file(filepath)
-        if missing:
+        missing_msgids = _process_file(filepath)
+        if missing_msgids:
             error_found = True
             print(f"Missing translations in '{filepath}':")
-            for msgid in missing:
+            for msgid in missing_msgids:
                 print(f"  {msgid}")
 
     if error_found:
@@ -41,41 +46,47 @@ def _process_file(filepath: str) -> list[str]:
     with open(filepath, "r", encoding="utf-8") as file:
         lines = file.readlines()
 
-    missing = []
+    missing_msgids = []
     for i, line in enumerate(lines):
-        if line.strip() == 'msgstr ""':
-            # Check if it's the start of a multi-line translation
-            if i + 1 < len(lines) and lines[i + 1].strip().startswith('"'):
+        if line.strip() == _MSGSTR_ID:
+            if _is_multi_line_msgstr(lines, i):
                 continue
 
-            # Identify the msgid for the missing translation
-            msgid_lines = []
-            for j in range(i - 1, -1, -1):
-                prev_line = lines[j].strip()
-                if not prev_line:
-                    if msgid_lines:
-                        break
-                    continue
+            msgid = _find_msgid_for_line(lines, i)
 
-                if prev_line.startswith("#"):
-                    continue
-
-                if prev_line.startswith("msgid "):
-                    msgid_lines.insert(0, prev_line)
-                    break
-
-                if prev_line.startswith('"'):
-                    msgid_lines.insert(0, prev_line)
-
-            full_msgid = " ".join(msgid_lines)
-
-            # The header entry has an empty msgid ("")
-            if full_msgid == 'msgid ""':
+            # Skip header entry (empty msgid)
+            if msgid == f'{_MSGID_ID.strip()} ""':
                 continue
 
-            if full_msgid:
-                missing.append(full_msgid)
+            if msgid:
+                missing_msgids.append(msgid)
             else:
-                missing.append(f"Unknown msgid near line {i + 1}")
+                missing_msgids.append(f"Unknown msgid near line {i + 1}")
 
-    return missing
+    return missing_msgids
+
+
+def _is_multi_line_msgstr(lines: list[str], index: int) -> bool:
+    """Check if the msgstr at the given index is multi-line."""
+    return (index + 1 < len(lines)
+            and lines[index + 1].strip().startswith(_STRING_ID))
+
+
+def _find_msgid_for_line(lines: list[str], index: int) -> str:
+    """Find the full msgid preceding the given line index."""
+    msgid_parts = []
+    for j in range(index - 1, -1, -1):
+        line = lines[j].strip()
+        if not line or line.startswith(_COMMENT_ID):
+            if msgid_parts:
+                break
+            continue
+
+        if line.startswith(_MSGID_ID):
+            msgid_parts.insert(0, line)
+            break
+
+        if line.startswith(_STRING_ID):
+            msgid_parts.insert(0, line)
+
+    return " ".join(msgid_parts)
