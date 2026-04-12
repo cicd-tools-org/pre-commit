@@ -180,6 +180,14 @@
   language: docker_image
   pass_filenames: true
   stages: [commit]
+- id: missing-translations
+  name: "missing-translations"
+  description: "Check for missing translations in PO files."
+  entry: missing_translations
+  files: "^.+\\.(po|pot)$"
+  language: python
+  pass_filenames: true
+  stages: [commit]
 - id: poetry-docs-build
   # Add sphinx to your poetry environment to use this hook.
   name: poetry-docs-build
