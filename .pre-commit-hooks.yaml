@@ -102,6 +102,7 @@
   name: "gettext-translations-missing"
   description: "Check all gettext '.po' files for untranslated strings."
   entry: gettext_translations_missing
+  always_run: true
   files: "^.+\\.po$"
   language: python
   pass_filenames: true
