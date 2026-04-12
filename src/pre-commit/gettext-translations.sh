@@ -93,15 +93,6 @@ _gettext_translations_args() {
       fi
       gettext_translations_compile
       ;;
-    missing)
-      if [[ -z "${GETTEXT_TRANSLATIONS_BASE_PATH}" ]] ||
-        [[ -z "${GETTEXT_TRANSLATIONS_EMPTY_MESSAGE_MATCH}" ]]; then
-        _gettext_translations_usage_title
-        _gettext_translations_usage_missing
-        _gettext_translations_usage_terminate
-      fi
-      gettext_translations_missing
-      ;;
     update)
       if [[ -z "${GETTEXT_TRANSLATIONS_BASE_PATH}" ]] ||
         [[ -z "${GETTEXT_TRANSLATIONS_CODE_BASE_PATH}" ]] ||
@@ -269,7 +260,6 @@ _gettext_translations_usage() {
   _gettext_translations_usage_title
   _gettext_translations_usage_add
   _gettext_translations_usage_compile
-  _gettext_translations_usage_missing
   _gettext_translations_usage_update
   _gettext_translations_usage_terminate
 }
@@ -288,16 +278,6 @@ _gettext_translations_usage_compile() {
   log "ERROR" "translations.sh compile"
   log "ERROR" "               -i [CONTAINER IMAGE WITH GETTEXT BINARIES]"
   log "ERROR" "               -p [BASE FILE PATH ('locales' folder or similar)]"
-}
-
-_gettext_translations_usage_missing() {
-  log "ERROR" "--------------------------------------------------------------------------------"
-  log "ERROR" "missing        < search for untranslated strings"
-  log "ERROR" "translations.sh missing"
-  log "ERROR" "               -i [CONTAINER IMAGE WITH GETTEXT BINARIES]"
-  log "ERROR" "               -p [BASE FILE PATH ('locales' folder or similar)]"
-  log "ERROR" "               -m [EMPTY MESSAGE MATCH STRING (defaults to 'msgstr ""')]"
-  log "ERROR" "               -s [LANGUAGES TO SKIP (use multiple times as needed)]"
 }
 
 _gettext_translations_usage_terminate() {
@@ -418,54 +398,6 @@ gettext_translations_compile() {
   done
 
   log "INFO" "Done."
-}
-
-gettext_translations_missing() {
-  local GETTEXT_TRANSLATIONS_LANGUAGE
-  local GETTEXT_TRANSLATIONS_LANGUAGES
-  local GETTEXT_TRANSLATIONS_LANGUAGE_TO_SKIP
-  local GETTEXT_TRANSLATIONS_MISSING=0
-  local GETTEXT_TRANSLATIONS_PO_FILE
-
-  GETTEXT_TRANSLATIONS_LANGUAGES=()
-
-  if ! _gettext_translations_check_existing_base_path ||
-    ! _gettext_translations_identify_existing_languages; then
-    return 127
-  fi
-
-  for GETTEXT_TRANSLATIONS_LANGUAGE in "${GETTEXT_TRANSLATIONS_LANGUAGES[@]}"; do
-
-    for GETTEXT_TRANSLATIONS_LANGUAGE_TO_SKIP in "${GETTEXT_TRANSLATIONS_LANGUAGES_BEING_SKIPPED[@]}"; do
-      if [[ "${GETTEXT_TRANSLATIONS_LANGUAGE_TO_SKIP}" == "${GETTEXT_TRANSLATIONS_LANGUAGE}" ]]; then
-        log "WARNING" "Skipping checks on '${GETTEXT_TRANSLATIONS_LANGUAGE}' ..."
-        break
-      fi
-      GETTEXT_TRANSLATIONS_LANGUAGE_TO_SKIP=""
-    done
-
-    if [[ -n "${GETTEXT_TRANSLATIONS_LANGUAGE_TO_SKIP}" ]]; then
-      continue
-    fi
-
-    log "INFO" "Checking '${GETTEXT_TRANSLATIONS_LANGUAGE}' for missing translations ..."
-    for GETTEXT_TRANSLATIONS_PO_FILE in "${GETTEXT_TRANSLATIONS_BASE_PATH}/${GETTEXT_TRANSLATIONS_LANGUAGE}/LC_MESSAGES/"*.po; do
-      if [[ "$(
-        grep \
-          -c \
-          "${GETTEXT_TRANSLATIONS_EMPTY_MESSAGE_MATCH}" \
-          "${GETTEXT_TRANSLATIONS_PO_FILE}" ||
-          true
-      )" -gt "1" ]] \
-        ; then
-        log "ERROR" "Found untranslated strings: '${GETTEXT_TRANSLATIONS_PO_FILE}' !"
-        GETTEXT_TRANSLATIONS_MISSING=127
-        continue
-      fi
-    done
-    log "INFO" "Check for '${GETTEXT_TRANSLATIONS_LANGUAGE}' is complete."
-  done
-  return "${GETTEXT_TRANSLATIONS_MISSING}"
 }
 
 gettext_translations_update() {
