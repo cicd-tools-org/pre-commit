@@ -41,6 +41,7 @@ from = 'src'
 include = 'cicd_tools_pre_commit'
 
 [tool.poetry.scripts]
+gettext_translations_missing = 'cicd_tools_pre_commit:gettext_translations_missing_hook'
 pysed = 'cicd_tools_pre_commit:pysed_hook'
 sphinx_build_language = 'cicd_tools_pre_commit:sphinx_build_language'
 sphinx_translate = 'cicd_tools_pre_commit:sphinx_translate'

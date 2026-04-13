@@ -101,12 +101,10 @@
 - id: gettext-translations-missing
   name: "gettext-translations-missing"
   description: "Check all gettext '.po' files for untranslated strings."
-  entry: ./src/pre-commit/gettext-translations.sh missing -i "ghcr.io/cicd-tools-org/cicd-tools-gettext:latest"
-  always_run: true
-  files: "^.+\\.py$"
-  language: script
-  pass_filenames: false
-  require_serial: true
+  entry: gettext_translations_missing
+  files: "^.+\\.po$"
+  language: python
+  pass_filenames: true
   stages: [commit]
 - id: gettext-translations-update
   name: "gettext-translations-update"
