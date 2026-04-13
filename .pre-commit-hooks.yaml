@@ -283,11 +283,11 @@
   pass_filenames: true
   require_serial: true
   stages: [commit-msg]
-- id: spelling-markdown
-  name: spelling-markdown
-  description: "Spellcheck the Markdown files."
+- id: spelling-docs
+  name: spelling-docs
+  description: "Spellcheck documentation files."
   entry: --entrypoint=vale ghcr.io/cicd-tools-org/cicd-tools:main
-  files: "^.+\\.md$|^.vale/Vocab/\\.+$"
+  files: "^.+\\.(md|rst)$|^.vale/Vocab/\\.+$"
   language: docker_image
   pass_filenames: true
   stages: [commit]
