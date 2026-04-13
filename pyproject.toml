@@ -22,7 +22,7 @@ readme = 'README.md'
 version = '0.6.0'
 
 [tool.poetry.dependencies]
-check-jsonschema = '^0.29.1'
+check-jsonschema = '^0.30.0'
 python = '>=3.8,<4.0'
 
 [tool.poetry.group]
