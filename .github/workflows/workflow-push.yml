@@ -151,7 +151,7 @@ jobs:
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
-  markdown_spelling:
+  documentation_spelling:
     needs:
       - configuration
     secrets:
@@ -161,8 +161,8 @@ jobs:
       CONCURRENCY: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_concurrency_limit }}
       INSTALL_PROJECT: true
       PRE_HOOK_COMMAND: poetry run pre-commit run --hook-stage manual spelling-vale-sync
-      PRECOMMIT_HOOK_ID: "spelling-markdown"
-      PRECOMMIT_HOOK_NAME: "Markdown Spelling"
+      PRECOMMIT_HOOK_ID: "spelling-docs"
+      PRECOMMIT_HOOK_NAME: "Documentation Spelling"
       PYTHON_VERSIONS: ${{ toJSON(fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_python_versions) }}
       VERBOSE_NOTIFICATIONS: ${{ fromJSON(needs.configuration.outputs.JSON_FILE_DATA).ci_verbose_notifications }}
 
@@ -318,11 +318,11 @@ jobs:
       - commit_lint
       - commit_spell_check
       - configuration
+      - documentation_spelling
       - git_conflict_markers
       - json_schema_lint
       - markdown_links
       - markdown_lint
-      - markdown_spelling
       - pre-commit_hooks
       - pre-commit_config_sorting
       - pre-commit_hooks_sorting
