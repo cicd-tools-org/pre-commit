@@ -24,7 +24,7 @@ repos:
         alias: ruff-lint
         types: ["python"]
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: 5f7f165dfad7d45d57d0598b9292eb6cdfaf4b55
+    rev: 2a9391660724164e8950a68f3cce1da753c5224e
     hooks:
       - id: cicd-tools-box
       - id: cicd-tools-key
