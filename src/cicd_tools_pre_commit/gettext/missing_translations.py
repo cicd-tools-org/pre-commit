@@ -7,11 +7,11 @@ import sys
 
 from cicd_tools_pre_commit.cli.types import file_existing
 
-COMMENT_IDENTIFIER = "#"
-MSGID_HEADER_IDENTIFIER = 'msgid ""'
-MSGID_IDENTIFIER = "msgid "
-MSGSTR_EMPTY_IDENTIFIER = 'msgstr ""'
-STRING_IDENTIFIER = '"'
+PO_COMMENT_IDENTIFIER = "#"
+PO_MSGID_HEADER_IDENTIFIER = 'msgid ""'
+PO_MSGID_IDENTIFIER = "msgid "
+PO_MSGSTR_EMPTY_IDENTIFIER = 'msgstr ""'
+PO_STRING_IDENTIFIER = '"'
 
 
 def gettext_translations_missing_hook() -> None:
@@ -49,14 +49,13 @@ def missing_translations(filepath: str) -> list[str]:
 
     missing_msgids = []
     for i, line in enumerate(lines):
-        if line.strip() == MSGSTR_EMPTY_IDENTIFIER:
+        if line.strip() == PO_MSGSTR_EMPTY_IDENTIFIER:
             if _is_multi_line_msgstr(lines, i):
                 continue
 
             msgid = _find_msgid_for_line(lines, i)
 
-            # Skip header entry (empty msgid)
-            if msgid == MSGID_HEADER_IDENTIFIER:
+            if msgid == PO_MSGID_HEADER_IDENTIFIER:
                 continue
 
             if msgid:
@@ -70,7 +69,7 @@ def missing_translations(filepath: str) -> list[str]:
 def _is_multi_line_msgstr(lines: list[str], index: int) -> bool:
     """Check if the msgstr at the given index is multi-line."""
     return (index + 1 < len(lines)
-            and lines[index + 1].strip().startswith(STRING_IDENTIFIER))
+            and lines[index + 1].strip().startswith(PO_STRING_IDENTIFIER))
 
 
 def _find_msgid_for_line(lines: list[str], index: int) -> str:
@@ -78,16 +77,16 @@ def _find_msgid_for_line(lines: list[str], index: int) -> str:
     msgid_lines = []
     for j in range(index - 1, -1, -1):
         line = lines[j].strip()
-        if not line or line.startswith(COMMENT_IDENTIFIER):
+        if not line or line.startswith(PO_COMMENT_IDENTIFIER):
             if msgid_lines:
                 break
             continue
 
-        if line.startswith(MSGID_IDENTIFIER):
+        if line.startswith(PO_MSGID_IDENTIFIER):
             msgid_lines.insert(0, line)
             break
 
-        if line.startswith(STRING_IDENTIFIER):
+        if line.startswith(PO_STRING_IDENTIFIER):
             msgid_lines.insert(0, line)
 
     return " ".join(msgid_lines)
