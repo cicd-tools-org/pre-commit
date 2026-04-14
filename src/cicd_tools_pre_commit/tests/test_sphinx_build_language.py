@@ -146,7 +146,8 @@ class TestSphinxBuildLanguage(unittest.TestCase):
 
         sphinx_build_language()
 
-        mock_rmtree.assert_called_once_with(os.path.join("source", "build", "en"))
+        mock_rmtree.assert_called_once_with(
+            os.path.join("source", "build", "en"))
 
     @patch(
         "sys.argv",

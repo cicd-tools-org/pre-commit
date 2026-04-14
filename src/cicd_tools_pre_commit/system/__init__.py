@@ -5,7 +5,7 @@ from __future__ import annotations
 import subprocess
 import sys
 
-from .fs import rmtree
+from .fs import rmtree as rmtree
 
 CALL_ERROR = "ERROR: non-zero exit status ({})"
 
