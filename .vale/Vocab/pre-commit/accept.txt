@@ -1,8 +1,8 @@
+fs
 mypy
 pre-commit
 pre-commit|Pre-Commit
 pre_bump_hook
-fs
 pylint
 pysed
 rmtree
