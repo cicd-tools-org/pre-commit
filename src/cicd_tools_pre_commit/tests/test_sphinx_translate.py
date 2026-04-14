@@ -1,4 +1,5 @@
 import argparse
+import os
 import unittest
 from unittest.mock import Mock, call, patch
 
@@ -16,10 +17,12 @@ class TestSphinxTranslate(unittest.TestCase):
     ])
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_translate__valid_args__calls_commands(
         self,
         mock_call,
+        mock_rmtree,
         mock_dir_existing,
         mock_dir_valid,
     ):
@@ -65,6 +68,7 @@ class TestSphinxTranslate(unittest.TestCase):
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
     @patch("os.environ")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree", Mock())
     @patch("cicd_tools_pre_commit.sphinx.call", Mock())
     def test_sphinx_translate__valid_args__clears_conflicting_virtual_envs(
         self,
@@ -88,10 +92,12 @@ class TestSphinxTranslate(unittest.TestCase):
     ])
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_translate__invalid_doc_directory__raises_system_exit(
         self,
         mock_call,
+        mock_rmtree,
         mock_dir_existing,
         mock_dir_valid,
     ):
@@ -112,10 +118,37 @@ class TestSphinxTranslate(unittest.TestCase):
     ])
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
+    @patch("cicd_tools_pre_commit.sphinx.call", Mock())
+    def test_sphinx_translate__valid_args__calls_rmtree(
+        self,
+        mock_rmtree,
+        mock_dir_existing,
+        mock_dir_valid,
+    ):
+        mock_dir_valid.side_effect = lambda x: x
+        mock_dir_existing.side_effect = lambda x: x
+
+        sphinx_translate()
+
+        mock_rmtree.assert_called_once_with(
+            os.path.join("documentation_folder", "build", "gettext"))
+
+    @patch("sys.argv", [
+        "sphinx_translate",
+        "-b",
+        "build",
+        "-s",
+        "documentation_folder",
+    ])
+    @patch("cicd_tools_pre_commit.sphinx.dir_valid")
+    @patch("cicd_tools_pre_commit.sphinx.dir_existing")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_translate__invalid_build_directory__raises_system_exit(
         self,
         mock_call,
+        mock_rmtree,
         mock_dir_existing,
         mock_dir_valid,
     ):

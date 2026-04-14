@@ -23,10 +23,12 @@ class TestSphinxBuildLanguage(unittest.TestCase):
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
     @patch("cicd_tools_pre_commit.sphinx.language_code")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_build_language__valid_args__calls_sphinx_build(
         self,
         mock_call,
+        mock_rmtree,
         mock_language_code,
         mock_dir_existing,
         mock_dir_valid,
@@ -66,6 +68,7 @@ class TestSphinxBuildLanguage(unittest.TestCase):
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
     @patch("cicd_tools_pre_commit.sphinx.language_code")
     @patch("os.environ")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree", Mock())
     @patch("cicd_tools_pre_commit.sphinx.call", Mock())
     def test_sphinx_build_language__valid_args__clears_conflicting_virtual_envs(
         self,
@@ -96,10 +99,12 @@ class TestSphinxBuildLanguage(unittest.TestCase):
     )
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_build_language__invalid_language__raises_system_exit(
         self,
         mock_call,
+        mock_rmtree,
         mock_dir_existing,
         mock_dir_valid,
     ):
@@ -118,6 +123,38 @@ class TestSphinxBuildLanguage(unittest.TestCase):
             "-l",
             "en",
             "-s",
+            "source",
+            "-b",
+            "build",
+        ],
+    )
+    @patch("cicd_tools_pre_commit.sphinx.dir_valid")
+    @patch("cicd_tools_pre_commit.sphinx.dir_existing")
+    @patch("cicd_tools_pre_commit.sphinx.language_code")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
+    @patch("cicd_tools_pre_commit.sphinx.call", Mock())
+    def test_sphinx_build_language__valid_args__calls_rmtree(
+        self,
+        mock_rmtree,
+        mock_language_code,
+        mock_dir_existing,
+        mock_dir_valid,
+    ):
+        mock_dir_existing.side_effect = lambda x: x
+        mock_language_code.side_effect = lambda x: x
+        mock_dir_valid.side_effect = lambda x: x
+
+        sphinx_build_language()
+
+        mock_rmtree.assert_called_once_with(os.path.join("source", "build", "en"))
+
+    @patch(
+        "sys.argv",
+        [
+            "sphinx_build_language",
+            "-l",
+            "en",
+            "-s",
             "missing",
             "-b",
             "build",
@@ -126,10 +163,12 @@ class TestSphinxBuildLanguage(unittest.TestCase):
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
     @patch("cicd_tools_pre_commit.sphinx.language_code")
+    @patch("cicd_tools_pre_commit.sphinx.rmtree")
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_build_language__missing_source__raises_system_exit(
         self,
         mock_call,
+        mock_rmtree,
         mock_language_code,
         mock_dir_existing,
         mock_dir_valid,

@@ -4,7 +4,7 @@ import argparse
 import os
 
 from .cli.types import dir_existing, dir_valid, language_code
-from .system import call
+from .system import call, rmtree
 
 
 def sphinx_build_language() -> None:
@@ -40,6 +40,7 @@ def sphinx_build_language() -> None:
     target_build_folder = os.path.join(args.source, args.build, args.language)
 
     os.environ.pop("VIRTUAL_ENV", None)
+    rmtree(target_build_folder)
 
     call([
         "poetry",
@@ -81,6 +82,7 @@ def sphinx_translate() -> None:
     gettext_folder = os.path.join(args.build, "gettext")
 
     os.environ.pop("VIRTUAL_ENV", None)
+    rmtree(os.path.join(args.source, gettext_folder))
 
     call(
         [
