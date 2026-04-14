@@ -38,7 +38,7 @@
     - "{CICD_RESOURCES}/schemas/cookiecutter.json"
   language: python
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: cicd-tools-schema-manifest
   name: cicd-tools-schema-manifest
   description: "Verify a JSON file against the CICD-Tools manifest schema."
@@ -48,7 +48,7 @@
     - "{CICD_RESOURCES}/schemas/manifest.json"
   language: python
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: commitizen-pre-bump
   name: commitizen-pre-bump
   description: "TOML quote formatting for commitizen."
@@ -71,7 +71,7 @@
   files: "^.+\\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: format-toml
   name: format-toml
   description: "Format the project's TOML files."
@@ -79,7 +79,7 @@
   files: "^.+\\.toml$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: gettext-translations-add
   name: "gettext-translations-add"
   description: "Add new languages to the project folder structure for gettext."
@@ -105,7 +105,7 @@
   files: "^.+\\.po$"
   language: python
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: gettext-translations-update
   name: "gettext-translations-update"
   description: "Extract translatable strings from the code base with gettext and regenerate '.pot' and '.po' files."
@@ -115,7 +115,7 @@
   language: script
   pass_filenames: false
   require_serial: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: git-conflict-markers
   name: "git-conflict-markers"
   entry: git
@@ -125,13 +125,13 @@
     - --cached
     - --check
   language: system
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-dockerfile
   name: lint-dockerfile
   description: "Lint the project's Dockerfiles."
   entry: --entrypoint=hadolint ghcr.io/cicd-tools-org/cicd-tools:main
   language: docker_image
-  stages: [commit]
+  stages: [pre-commit]
   types: ["dockerfile"]
 - id: lint-github-workflow
   name: lint-github-workflow
@@ -144,7 +144,7 @@
   files: "^.github/workflows/.+\\.(yaml|yml)$"
   language: docker_image
   pass_filenames: false
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-github-workflow-header
   name: lint-github-workflow-header
   description: "Lint the headers of the project's GitHub workflow files."
@@ -152,7 +152,7 @@
   files: "^.github/workflows/.+\\.(yaml|yml)$"
   language: script
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-markdown
   name: lint-markdown
   description: "Lint the Markdown files."
@@ -163,7 +163,7 @@
     - ".markdownlint.yml"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: lint-shell
   name: lint-shell
   description: "Lint the project's shell scripts."
@@ -177,7 +177,7 @@
   files: "^.+\\.(bash|sh)$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: poetry-docs-build
   # Add sphinx to your poetry environment to use this hook.
   name: poetry-docs-build
@@ -196,7 +196,7 @@
   language: python
   pass_filenames: false
   require_serial: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: poetry-lint-ansible
   # Add ansible-lint to your poetry environment to use this hook.
   name: poetry-lint-ansible
@@ -205,7 +205,7 @@
   files: "^.+\\.(yaml|yml)$|^.ansible-lint$"
   language: script
   pass_filenames: false
-  stages: [commit]
+  stages: [pre-commit]
 - id: poetry-lint-python
   # Add pylint to your poetry environment to use this hook.
   name: "poetry-lint-python"
@@ -213,7 +213,7 @@
   entry: poetry run pylint
   files: "^.+\\.py$"
   language: system
-  stages: [commit]
+  stages: [pre-commit]
 - id: poetry-types-python
   # Add mypy to your poetry environment to use this hook.
   name: "types-python"
@@ -227,7 +227,7 @@
   files: "^.+\\.pyi?$"
   language: system
   require_serial: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: pre-commit-sort-config
   name: "pre-commit-sort-config"
   description: "Sort the hooks inside your pre-commit configuration files."
@@ -238,7 +238,7 @@
   language: script
   pass_filenames: true
   require_serial: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: pre-commit-sort-hooks
   name: "pre-commit-sort-hooks"
   description: "Sort the hooks inside your pre-commit hook definition files."
@@ -249,14 +249,14 @@
   language: script
   pass_filenames: true
   require_serial: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: pysed
   name: "pysed"
   description: "Sed-like find and replace using Python."
   entry: pysed
   language: python
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: security-credentials
   name: security-credentials
   description: "Scan codebase for checked in credentials."
@@ -271,7 +271,7 @@
     - "--trust-local-git-config"
   language: docker_image
   pass_filenames: false
-  stages: [commit]
+  stages: [pre-commit]
 - id: spelling-commit-message
   name: spelling-commit-message
   description: "Check the spelling on the commit message."
@@ -290,7 +290,7 @@
   files: "^.+\\.(md|rst)$|^.vale/Vocab/\\.+$"
   language: docker_image
   pass_filenames: true
-  stages: [commit]
+  stages: [pre-commit]
 - id: spelling-vale-sync
   name: spelling-vale-sync
   description: "Download any required vale packages."
@@ -306,4 +306,4 @@
   entry: sh -c 'for FILE in "$@"; do sort -u -o ${FILE} ${FILE}; done' --
   files: "^.vale/Vocab/.+/(accept|reject)\\.txt$"
   language: system
-  stages: [commit]
+  stages: [pre-commit]
