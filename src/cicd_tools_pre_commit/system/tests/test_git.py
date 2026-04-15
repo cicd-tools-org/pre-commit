@@ -21,7 +21,7 @@ class TestGitLsUntracked(unittest.TestCase):
                 "git", "ls-files", "--others", "--exclude-standard", "--",
                 "some/path",
             ],
-            capture_output=True,
+            print_output=False,
         )
 
     @patch("cicd_tools_pre_commit.system.git.call")

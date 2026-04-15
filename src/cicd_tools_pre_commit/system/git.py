@@ -9,9 +9,6 @@ def git_ls_untracked(path: str) -> list[str]:
     """List untracked files in the specified path."""
     output = call(
         ["git", "ls-files", "--others", "--exclude-standard", "--", path],
-        capture_output=True,
+        print_output=False,
     )
-    if not output:
-        return []
-
     return output.splitlines()
