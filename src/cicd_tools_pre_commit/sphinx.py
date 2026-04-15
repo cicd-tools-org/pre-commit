@@ -2,9 +2,10 @@
 
 import argparse
 import os
+import sys
 
 from .cli.types import dir_existing, dir_valid, language_code
-from .system import call, rmtree
+from .system import call, git_ls_untracked, rmtree
 
 SPHINX_DEFAULT_GETTEXT_FOLDER = "gettext"
 SPHINX_DEFAULT_LOCALES_FOLDER = "locales"
@@ -123,3 +124,10 @@ def sphinx_translate() -> None:
         "-d",
         locales_folder,
     ], )
+
+    untracked_files = git_ls_untracked(locales_folder)
+    if untracked_files:
+        print("Untracked translation files detected:")
+        for untracked_file in untracked_files:
+            print(f"  {untracked_file}")
+        sys.exit(1)

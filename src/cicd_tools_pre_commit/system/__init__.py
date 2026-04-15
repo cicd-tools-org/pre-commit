@@ -6,6 +6,7 @@ import subprocess
 import sys
 
 from .fs import rmtree as rmtree
+from .git import git_ls_untracked as git_ls_untracked
 
 CALL_ERROR = "ERROR: non-zero exit status ({})"
 
