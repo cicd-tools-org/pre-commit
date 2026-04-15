@@ -38,9 +38,9 @@ def sphinx_build_language() -> None:
     args = parser.parse_args()
 
     target_build_folder = os.path.join(args.source, args.build, args.language)
+    rmtree(target_build_folder)
 
     os.environ.pop("VIRTUAL_ENV", None)
-    rmtree(target_build_folder)
 
     call([
         "poetry",
@@ -80,9 +80,9 @@ def sphinx_translate() -> None:
     args = parser.parse_args()
 
     gettext_folder = os.path.join(args.build, "gettext")
+    rmtree(os.path.join(args.source, gettext_folder))
 
     os.environ.pop("VIRTUAL_ENV", None)
-    rmtree(os.path.join(args.source, gettext_folder))
 
     call(
         [
