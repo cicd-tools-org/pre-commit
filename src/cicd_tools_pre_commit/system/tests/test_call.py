@@ -56,3 +56,19 @@ class TestCall(unittest.TestCase):
             call(shlex.split("bash -c 'exit 127'"))
 
         mocked_exit.assert_called_once_with(127)
+
+    def test_call__capture_output__returns_stdout(self) -> None:
+        result = call(
+            shlex.split("echo 'test output'"),
+            capture_output=True,
+        )
+
+        assert result == "test output\n"
+
+    def test_call__capture_output__error__returns_stdout(self) -> None:
+        result = call(
+            shlex.split("bash -c 'echo \"error output\"; exit 1'"),
+            capture_output=True,
+        )
+
+        assert result == "error output\n"

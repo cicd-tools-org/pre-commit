@@ -9,6 +9,7 @@ from .system import call, git_ls_untracked, rmtree
 
 SPHINX_DEFAULT_GETTEXT_FOLDER = "gettext"
 SPHINX_DEFAULT_LOCALES_FOLDER = "locales"
+SPHINX_UNTRACKED_FILES_ERROR = "Untracked translation files detected:"
 
 
 def sphinx_build_language() -> None:
@@ -127,7 +128,7 @@ def sphinx_translate() -> None:
 
     untracked_files = git_ls_untracked(locales_folder)
     if untracked_files:
-        print("Untracked translation files detected:")
+        print(SPHINX_UNTRACKED_FILES_ERROR)
         for untracked_file in untracked_files:
             print(f"  {untracked_file}")
         sys.exit(1)

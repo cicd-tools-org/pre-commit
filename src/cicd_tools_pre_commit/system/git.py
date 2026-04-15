@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
-import subprocess
+from .call import call
 
 
 def git_ls_untracked(path: str) -> list[str]:
     """List untracked files in the specified path."""
-    process = subprocess.run(
+    output = call(
         ["git", "ls-files", "--others", "--exclude-standard", "--", path],
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
+        capture_output=True,
     )
-    return process.stdout.decode("utf-8").splitlines()
+    if not output:
+        return []
+
+    return output.splitlines()

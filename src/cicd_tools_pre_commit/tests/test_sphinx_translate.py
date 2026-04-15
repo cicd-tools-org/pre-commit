@@ -35,16 +35,17 @@ class TestSphinxTranslate(unittest.TestCase):
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
     @patch("cicd_tools_pre_commit.sphinx.rmtree", Mock())
-    @patch("cicd_tools_pre_commit.sphinx.git_ls_untracked")
+    @patch(
+        "cicd_tools_pre_commit.sphinx.git_ls_untracked",
+        Mock(return_value=[]),
+    )
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_translate__valid_args__default_folders__calls_commands(
         self,
         mock_call,
-        mock_git_ls_untracked,
         mock_dir_existing,
         mock_dir_valid,
     ):
-        mock_git_ls_untracked.return_value = []
         mock_dir_valid.side_effect = lambda x: x
         mock_dir_existing.side_effect = lambda x: x
 
@@ -78,16 +79,17 @@ class TestSphinxTranslate(unittest.TestCase):
     @patch("cicd_tools_pre_commit.sphinx.dir_valid")
     @patch("cicd_tools_pre_commit.sphinx.dir_existing")
     @patch("cicd_tools_pre_commit.sphinx.rmtree", Mock())
-    @patch("cicd_tools_pre_commit.sphinx.git_ls_untracked")
+    @patch(
+        "cicd_tools_pre_commit.sphinx.git_ls_untracked",
+        Mock(return_value=[]),
+    )
     @patch("cicd_tools_pre_commit.sphinx.call")
     def test_sphinx_translate__valid_args__specified_folders__calls_commands(
         self,
         mock_call,
-        mock_git_ls_untracked,
         mock_dir_existing,
         mock_dir_valid,
     ):
-        mock_git_ls_untracked.return_value = []
         mock_dir_valid.side_effect = lambda x: x
         mock_dir_existing.side_effect = lambda x: x
 
