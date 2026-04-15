@@ -2,7 +2,7 @@
 default_install_hook_types: []
 repos:
   - repo: https://github.com/cicd-tools-org/pre-commit.git
-    rev: 9db6a9e7e0384d25ac955f1b1d79db50c2f95a31
+    rev: 04b8bcfd7739c04f801a481da88763fa078c1bda
     hooks:
       - id: cicd-tools-box
         entry: ./src/pre-commit/cicd-tools-box.sh -c system -j system -g system
