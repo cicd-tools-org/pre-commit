@@ -4,3 +4,4 @@ pre-commit|Pre-Commit
 pre_bump_hook
 pylint
 pysed
+sphinx_translate

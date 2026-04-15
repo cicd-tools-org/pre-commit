@@ -19,7 +19,10 @@ class TestGitLsUntracked(unittest.TestCase):
 
         self.assertEqual(result, [])
         mock_run.assert_called_once_with(
-            ["git", "ls-files", "--others", "--exclude-standard", "--", "some/path"],
+            [
+                "git", "ls-files", "--others", "--exclude-standard", "--",
+                "some/path",
+            ],
             check=True,
             stdout=-1,
             stderr=-2,
