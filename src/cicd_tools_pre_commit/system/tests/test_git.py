@@ -34,3 +34,14 @@ class TestGitLsUntracked(unittest.TestCase):
         result = git_ls_untracked("some/path")
 
         self.assertEqual(result, ["file1.po", "file2.po"])
+
+    @patch("cicd_tools_pre_commit.system.git.call")
+    def test_git_ls_untracked__with_non_po_files__filters_them(
+        self,
+        mock_call,
+    ):
+        mock_call.return_value = "file1.po\nfile2.mo\n"
+
+        result = git_ls_untracked("some/path")
+
+        self.assertEqual(result, ["file1.po"])

@@ -70,8 +70,10 @@ class TestCall(unittest.TestCase):
         assert self.stdout_capture.getvalue() == ""
         assert result == "test output\n"
 
-    def test_call__print_output_false__error__returns_output_no_exit(
+    @mock.patch("sys.exit")
+    def test_call__print_output_false__error__prints_and_exits(
         self,
+        mocked_exit,
     ) -> None:
         with (redirect_stdout(self.stdout_capture),
               redirect_stderr(self.stderr_capture)):
@@ -80,5 +82,7 @@ class TestCall(unittest.TestCase):
                 print_output=False,
             )
 
-        assert self.stdout_capture.getvalue() == ""
+        assert self.stdout_capture.getvalue() == (
+            f"error output\n{CALL_ERROR.format(1)}\n")
         assert result == "error output\n"
+        mocked_exit.assert_called_once_with(1)

@@ -27,9 +27,8 @@ def call(
             print(f"{output}", end="")
     except subprocess.CalledProcessError as exc:
         output = exc.stdout.decode("utf-8")
-        if print_output:
-            print(f"{output}", end="")
-            print(CALL_ERROR.format(exc.returncode))
-            sys.exit(exc.returncode)
+        print(f"{output}", end="")
+        print(CALL_ERROR.format(exc.returncode))
+        sys.exit(exc.returncode)
 
     return output

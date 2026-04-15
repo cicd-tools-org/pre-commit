@@ -11,4 +11,4 @@ def git_ls_untracked(path: str) -> list[str]:
         ["git", "ls-files", "--others", "--exclude-standard", "--", path],
         print_output=False,
     )
-    return output.splitlines()
+    return [line for line in output.splitlines() if line.endswith(".po")]
